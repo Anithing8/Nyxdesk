@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nyxdesk Slides</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  html, body{ height:100%; overflow:hidden; }
+  .app{ height:100vh; display:flex; flex-direction:column; }
+  .toolbar2{
+    display:flex; align-items:center; gap:8px; flex-wrap: wrap;
+    padding: 8px 14px; border-bottom: 1px solid var(--line); background: var(--bg-elevated);
+  }
+  .toolbar2 .sep{ width:1px; height:22px; background:var(--line); margin:0 4px; }
+  .swatch{ width:22px;height:22px;border-radius:50%;border:1px solid var(--line); cursor:pointer; }
+
+  .body2{ flex:1; display:flex; min-height:0; }
+  .rail{
+    width: 176px; flex: none; overflow-y:auto;
+    border-right: 1px solid var(--line); background: var(--bg-elevated);
+    padding: 12px 10px;
+  }
+  .thumb{
+    aspect-ratio: 16/9; border: 1px solid var(--line); border-radius: var(--radius-sm);
+    margin-bottom: 10px; position: relative; cursor:pointer; overflow:hidden;
+    background:#fff; display:flex; align-items:center; justify-content:center;
+    font-size: 9px; color:#333; text-align:center; padding:4px;
+  }
+  .thumb.active{ outline: 2px solid var(--accent); outline-offset: 2px; }
+  .thumb .num{
+    position:absolute; top:3px; left:5px; font-family: var(--font-mono); font-size:9px; color:#888;
+  }
+  .thumb .del{
+    position:absolute; top:2px; right:2px; width:16px;height:16px; border-radius:3px;
+    background: rgba(0,0,0,.55); color:#fff; font-size:10px; line-height:16px; text-align:center;
+    display:none;
+  }
+  .thumb:hover .del{ display:block; }
+  .addSlideBtn{
+    width:100%; padding:8px; border:1px dashed var(--line); border-radius:var(--radius-sm);
+    background:transparent; color:var(--ink-dim); font-size:12.5px;
+  }
+
+  .stage{
+    flex:1; display:flex; align-items:center; justify-content:center;
+    background:
+      repeating-linear-gradient(45deg, var(--bg-elevated-2) 0 1px, transparent 1px 22px),
+      var(--bg);
+    padding: 24px; overflow:auto; position:relative;
+  }
+  .canvas-outer{ width: 100%; max-width: 960px; aspect-ratio: 16/9; }
+  #canvas{
+    width:960px; height:540px; background:#ffffff; position:relative;
+    transform-origin: top left;
+    box-shadow: 0 20px 44px rgba(0,0,0,0.35);
+    overflow:hidden;
+  }
+  .el{
+    position:absolute; box-sizing:border-box;
+    border: 1px solid transparent;
+    cursor: move; user-select:none;
+  }
+  .el.selected{ border-color: var(--focus); }
+  .el[data-type="text"]{ padding:4px 6px; overflow:hidden; line-height:1.25; }
+  .el[data-type="text"][contenteditable="true"]{ cursor:text; user-select:text; }
+  .el[data-type="shape"]{ }
+  .el img{ width:100%; height:100%; object-fit:contain; pointer-events:none; }
+  .handle{
+    position:absolute; right:-5px; bottom:-5px; width:10px; height:10px;
+    background: var(--focus); border-radius:2px; cursor: nwse-resize;
+    display:none;
+  }
+  .el.selected .handle{ display:block; }
+
+  #present{
+    position:fixed; inset:0; background:#000; z-index:500; display:none;
+    align-items:center; justify-content:center;
+  }
+  #present.on{ display:flex; }
+  #present .slide{ width:100%; max-width:1400px; aspect-ratio:16/9; background:#fff; position:relative; }
+  #present .hint{ position:fixed; bottom:16px; right:20px; color:#888; font-size:12px; font-family: var(--font-mono); }
+
+  @media (max-width: 760px){
+    .rail{ width: 120px; }
+    .topbar__module{ display:none; }
+    .toolbar2 .label{ display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <a class="topbar__brand" href="index.html"><span class="dot"></span>Nyxdesk</a>
+    <span class="topbar__module">Slides</span>
+
+    <div class="menu" id="fileMenu">
+      <button class="btn btn--ghost" onclick="toggleMenu('fileMenu')">File ▾</button>
+      <div class="menu__panel">
+        <button class="menu__item" onclick="newDeck()">New presentation</button>
+        <button class="menu__item" onclick="triggerOpen()">Open… <small>.pptx (text only)</small></button>
+        <div class="menu__sep"></div>
+        <button class="menu__item" onclick="exportPptx()">Save as .pptx</button>
+      </div>
+    </div>
+    <input type="file" id="openInput" accept=".pptx" class="hidden">
+
+    <input class="field" id="deckTitle" value="Untitled presentation" style="width:200px" aria-label="Presentation title">
+
+    <div class="topbar__spacer"></div>
+    <div class="topbar__actions">
+      <button class="icon-btn" onclick="nyxToggleTheme()" title="Toggle theme">◐</button>
+      <button class="btn" onclick="startPresent()">▶ Present</button>
+      <button class="btn btn--primary" onclick="exportPptx()">Export .pptx</button>
+    </div>
+  </div>
+
+  <div class="toolbar2">
+    <button class="btn" onclick="addText()">+ Text</button>
+    <button class="btn" onclick="triggerImage()">+ Image</button>
+    <input type="file" id="imageInput" accept="image/*" class="hidden">
+    <button class="btn" onclick="addShape()">+ Rectangle</button>
+    <span class="sep"></span>
+    <span class="label" style="font-size:12px;color:var(--ink-faint)">Slide background</span>
+    <input type="color" id="bgColor" value="#ffffff" class="swatch" onchange="setBg(this.value)">
+    <span class="sep"></span>
+    <button class="btn btn--ghost" id="deleteBtn" onclick="deleteSelected()" disabled>Delete element</button>
+  </div>
+
+  <div class="body2">
+    <aside class="rail" id="rail"></aside>
+    <div class="stage">
+      <div class="canvas-outer">
+        <div id="canvas"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="present">
+  <div class="slide" id="presentSlide"></div>
+  <div class="hint">Esc to exit · → / space next · ← previous</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/slides.js"></script>
+</body>
+</html>

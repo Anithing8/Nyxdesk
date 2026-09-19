@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nyxdesk Docs</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css">
+<style>
+  html, body{ height: 100%; overflow: hidden; }
+  .app{ height: 100vh; display:flex; flex-direction:column; }
+  .workspace{
+    flex: 1; overflow-y: auto; background: var(--bg);
+    padding: 40px 20px 120px;
+  }
+  .page{
+    max-width: 820px; margin: 0 auto;
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    min-height: 1000px;
+    box-shadow: 0 20px 44px rgba(0,0,0,0.28);
+  }
+  .ql-toolbar.ql-snow{
+    border: none !important;
+    border-bottom: 1px solid var(--line) !important;
+    background: var(--bg-elevated);
+    padding: 10px 14px !important;
+    position: sticky; top: 0; z-index: 5;
+  }
+  .ql-container.ql-snow{ border: none !important; font-family: var(--font-sans); font-size: 15px; }
+  .ql-editor{ padding: 64px 72px; min-height: 900px; font-family: "Source Serif 4", Georgia, serif; font-size: 16.5px; line-height: 1.75; color: var(--ink); }
+  .ql-editor.ql-blank::before{ color: var(--ink-faint); font-style: normal; }
+  .ql-snow .ql-stroke{ stroke: var(--ink-dim); }
+  .ql-snow .ql-fill{ fill: var(--ink-dim); }
+  .ql-snow .ql-picker{ color: var(--ink-dim); }
+  .ql-snow .ql-picker-options{ background: var(--bg-elevated); border-color: var(--line) !important; }
+  .ql-snow.ql-toolbar button:hover .ql-stroke, .ql-snow.ql-toolbar button.ql-active .ql-stroke{ stroke: var(--accent); }
+  .ql-snow.ql-toolbar button:hover .ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-fill{ fill: var(--accent); }
+  .ql-snow .ql-picker-label.ql-active, .ql-snow .ql-picker-item.ql-selected{ color: var(--accent); }
+
+  .statusbar{
+    display:flex; align-items:center; gap: 16px;
+    padding: 8px 16px; border-top: 1px solid var(--line);
+    background: var(--bg-elevated); color: var(--ink-faint); font-size: 12px;
+  }
+  .statusbar .sep{ width:1px; height:12px; background: var(--line); }
+
+  @media (max-width: 700px){
+    .ql-editor{ padding: 32px 22px; }
+    .topbar__module{ display:none; }
+  }
+  @media print{
+    .topbar, .statusbar{ display:none !important; }
+    .workspace{ overflow: visible; padding: 0; }
+    .page{ border:none; box-shadow:none; max-width:none; }
+    .ql-toolbar{ display:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <a class="topbar__brand" href="index.html"><span class="dot"></span>Nyxdesk</a>
+    <span class="topbar__module">Docs</span>
+
+    <div class="menu" id="fileMenu">
+      <button class="btn btn--ghost" onclick="toggleMenu('fileMenu')">File ▾</button>
+      <div class="menu__panel">
+        <button class="menu__item" onclick="newDoc()">New document</button>
+        <button class="menu__item" onclick="triggerOpen()">Open… <small>.docx / .txt / .html</small></button>
+        <div class="menu__sep"></div>
+        <button class="menu__item" onclick="saveAs('docx')">Save as .docx</button>
+        <button class="menu__item" onclick="saveAs('html')">Save as .html</button>
+        <button class="menu__item" onclick="saveAs('txt')">Save as .txt</button>
+        <div class="menu__sep"></div>
+        <button class="menu__item" onclick="window.print()">Print / Save as PDF</button>
+      </div>
+    </div>
+    <input type="file" id="openInput" accept=".docx,.txt,.html,.htm" class="hidden">
+
+    <input class="field" id="docTitle" value="Untitled document" style="width:220px" aria-label="Document title">
+
+    <div class="topbar__spacer"></div>
+    <div class="topbar__actions">
+      <button class="icon-btn" onclick="nyxToggleTheme()" title="Toggle theme">◐</button>
+      <button class="btn btn--primary" onclick="saveAs('docx')">Save .docx</button>
+    </div>
+  </div>
+
+  <div class="workspace">
+    <div class="page">
+      <div id="editor"></div>
+    </div>
+  </div>
+
+  <div class="statusbar">
+    <span id="wordCount">0 words</span>
+    <span class="sep"></span>
+    <span id="charCount">0 characters</span>
+    <span class="sep"></span>
+    <span>Autosaved locally</span>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.7.0/mammoth.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html-docx-js/dist/html-docx.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/docs.js"></script>
+</body>
+</html>

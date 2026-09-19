@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nyxdesk Sheets</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  html, body{ height:100%; overflow:hidden; }
+  .app{ height:100vh; display:flex; flex-direction:column; }
+
+  .formulabar{
+    display:flex; align-items:center; gap:10px;
+    padding: 8px 14px; border-bottom: 1px solid var(--line);
+    background: var(--bg-elevated);
+  }
+  .formulabar .ref{
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-dim);
+    width: 56px; text-align:center; border-right: 1px solid var(--line); padding-right: 10px;
+  }
+  .formulabar input{
+    flex:1; background: transparent; border: none; color: var(--ink);
+    font-family: var(--font-mono); font-size: 13.5px; outline: none;
+  }
+
+  .gridwrap{ flex:1; overflow: auto; background: var(--bg); }
+  table.grid{ border-collapse: collapse; table-layout: fixed; }
+  table.grid th, table.grid td{
+    border: 1px solid var(--line-soft);
+    min-width: 96px; width: 96px; height: 28px;
+    padding: 0 8px;
+    font-size: 13px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  table.grid thead th{
+    position: sticky; top:0; z-index: 3;
+    background: var(--bg-elevated); color: var(--ink-dim);
+    font-weight: 500; font-family: var(--font-mono); font-size: 11.5px;
+    text-align:center;
+  }
+  table.grid tbody th{
+    position: sticky; left:0; z-index: 2;
+    background: var(--bg-elevated); color: var(--ink-faint);
+    font-weight: 500; font-family: var(--font-mono); font-size: 11.5px;
+    text-align:center; min-width: 40px; width: 40px;
+  }
+  table.grid thead th:first-child{ position: sticky; left:0; top:0; z-index:4; min-width:40px; width:40px; }
+  table.grid td{ background: var(--bg-elevated); color: var(--ink); cursor: cell; }
+  table.grid td[contenteditable="true"]:focus{
+    outline: 2px solid var(--focus); outline-offset: -2px;
+    position: relative; z-index: 1; white-space: normal; overflow: visible;
+  }
+  table.grid td.selected{ background: var(--bg-elevated-2); box-shadow: inset 0 0 0 2px var(--focus); }
+  table.grid td.num{ text-align: right; font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 700px){
+    .topbar__module{ display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <a class="topbar__brand" href="index.html"><span class="dot"></span>Nyxdesk</a>
+    <span class="topbar__module">Sheets</span>
+
+    <div class="menu" id="fileMenu">
+      <button class="btn btn--ghost" onclick="toggleMenu('fileMenu')">File ▾</button>
+      <div class="menu__panel">
+        <button class="menu__item" onclick="newSheet()">New spreadsheet</button>
+        <button class="menu__item" onclick="triggerOpen()">Open… <small>.xlsx / .csv</small></button>
+        <div class="menu__sep"></div>
+        <button class="menu__item" onclick="saveAs('xlsx')">Save as .xlsx</button>
+        <button class="menu__item" onclick="saveAs('csv')">Save as .csv</button>
+      </div>
+    </div>
+    <input type="file" id="openInput" accept=".xlsx,.xls,.csv" class="hidden">
+
+    <input class="field" id="sheetTitle" value="Untitled spreadsheet" style="width:200px" aria-label="Spreadsheet title">
+
+    <div class="topbar__spacer"></div>
+    <div class="topbar__actions">
+      <button class="icon-btn" onclick="nyxToggleTheme()" title="Toggle theme">◐</button>
+      <button class="btn btn--primary" onclick="saveAs('xlsx')">Save .xlsx</button>
+    </div>
+  </div>
+
+  <div class="formulabar">
+    <div class="ref" id="cellRef">A1</div>
+    <input id="formulaInput" placeholder="Enter a value, or a formula like =SUM(A1:A4)" autocomplete="off">
+  </div>
+
+  <div class="gridwrap">
+    <table class="grid" id="grid"></table>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/sheets.js"></script>
+</body>
+</html>

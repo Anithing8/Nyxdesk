@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nyxdesk — an open desk for your documents</title>
+<meta name="description" content="Nyxdesk is a free, open-source, browser-based office suite: write documents, build spreadsheets, and design slide decks — all client-side, nothing uploaded anywhere.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .hero{
+    padding: 96px 0 72px;
+    border-bottom: 1px solid var(--line);
+    background:
+      radial-gradient(60% 50% at 85% -10%, rgba(224,164,88,0.10), transparent 60%),
+      var(--bg);
+  }
+  .hero__eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    color: var(--ink-dim); font-size: 13px; margin-bottom: 22px;
+  }
+  .hero__eyebrow .dot{ width:6px; height:6px; border-radius:50%; background: var(--accent); }
+  .hero h1{
+    font-size: clamp(34px, 6vw, 58px);
+    line-height: 1.06;
+    letter-spacing: -0.01em;
+    max-width: 15ch;
+  }
+  .hero p.lede{
+    margin-top: 20px;
+    max-width: 56ch;
+    color: var(--ink-dim);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .hero__actions{ display:flex; gap:12px; margin-top: 32px; flex-wrap: wrap; }
+  .hero__actions .btn{ padding: 11px 18px; font-size: 14px; }
+
+  nav.top{
+    display:flex; align-items:center; gap: 20px;
+    padding: 20px 0;
+  }
+  nav.top .brand{
+    display:flex; align-items:center; gap:9px;
+    font-family: var(--font-serif); font-weight:600; font-size: 18px;
+    text-decoration:none;
+  }
+  nav.top .brand .dot{ width:9px; height:9px; border-radius:50%; background: var(--accent); }
+  nav.top .links{ margin-left:auto; display:flex; gap: 22px; align-items:center; }
+  nav.top .links a{
+    color: var(--ink-dim); text-decoration:none; font-size: 14px;
+  }
+  nav.top .links a:hover{ color: var(--ink); }
+
+  .cards{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-top: 56px;
+  }
+  .card{
+    background: var(--bg);
+    padding: 30px 26px 26px;
+    position: relative;
+    display:flex; flex-direction:column; min-height: 220px;
+  }
+  .card::before{
+    content:""; position:absolute; top:0; left:0; right:0; height: 3px;
+    background: var(--tint);
+  }
+  .card h3{ font-size: 20px; margin-top: 14px; }
+  .card .kicker{
+    font-size: 12.5px; color: var(--ink-faint);
+    font-family: var(--font-mono);
+  }
+  .card p{ color: var(--ink-dim); font-size: 14px; margin-top: 10px; line-height:1.55; flex:1; }
+  .card a.open{
+    margin-top: 18px;
+    display:inline-flex; align-items:center; gap:6px;
+    font-size: 13.5px; font-weight:600; color: var(--ink);
+    text-decoration:none;
+  }
+  .card a.open .arrow{ transition: transform .15s; }
+  .card a.open:hover .arrow{ transform: translateX(3px); }
+  .card .glyph{
+    width: 34px; height: 34px;
+    display:flex; align-items:center; justify-content:center;
+    border: 1px solid var(--line); border-radius: var(--radius-sm);
+    color: var(--tint); font-family: var(--font-serif); font-weight:700; font-size:16px;
+  }
+
+  section.strip{
+    padding: 64px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .strip h2{ font-size: 24px; max-width: 24ch; }
+  .strip__grid{
+    margin-top: 34px;
+    display:grid; grid-template-columns: repeat(4, 1fr); gap: 28px;
+  }
+  .strip__item h4{
+    font-family: var(--font-sans); font-size: 14px; font-weight:600;
+  }
+  .strip__item p{ margin-top:8px; color: var(--ink-dim); font-size:13.5px; line-height:1.6; }
+  .strip__num{ font-family: var(--font-mono); color: var(--ink-faint); font-size:12px; }
+
+  footer{ padding: 40px 0 60px; }
+  footer .row{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    gap: 20px; flex-wrap: wrap;
+  }
+  footer p{ color: var(--ink-faint); font-size: 12.5px; max-width: 52ch; line-height:1.6; }
+  footer .links a{ color: var(--ink-dim); text-decoration:none; font-size: 13px; margin-left: 18px; }
+  footer .links a:first-child{ margin-left: 0; }
+
+  @media (max-width: 860px){
+    .cards{ grid-template-columns: 1fr; }
+    .strip__grid{ grid-template-columns: repeat(2,1fr); }
+  }
+  @media (max-width: 560px){
+    .hero{ padding: 64px 0 48px; }
+    nav.top .links a:not(.gh){ display:none; }
+    .strip__grid{ grid-template-columns: 1fr; }
+    footer .row{ flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <nav class="top">
+    <a class="brand" href="index.html"><span class="dot"></span>Nyxdesk</a>
+    <div class="links">
+      <a href="docs.html">Docs</a>
+      <a href="sheets.html">Sheets</a>
+      <a href="slides.html">Slides</a>
+      <a class="gh" href="https://github.com/" target="_blank" rel="noopener">GitHub ↗</a>
+      <button class="icon-btn" onclick="nyxToggleTheme()" aria-label="Toggle theme" title="Toggle light / dark">◐</button>
+    </div>
+  </nav>
+</div>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero__eyebrow"><span class="dot"></span>Free &amp; open source · runs entirely in your browser</div>
+    <h1>One desk, open at all hours, for every document you write.</h1>
+    <p class="lede">Nyxdesk is a lightweight office suite that opens, edits and saves Word, Excel and PowerPoint files — right in the browser, with nothing sent to a server. Fork it, host it on GitHub Pages for free, and make it yours.</p>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="docs.html">Open Docs</a>
+      <a class="btn" href="sheets.html">Open Sheets</a>
+      <a class="btn" href="slides.html">Open Slides</a>
+    </div>
+  </div>
+</header>
+
+<section class="container">
+  <div class="cards">
+    <div class="card" style="--tint: var(--docs-tint)">
+      <div class="glyph">D</div>
+      <div class="kicker">.docx · .txt · .html</div>
+      <h3>Docs</h3>
+      <p>A distraction-free writer with headings, lists, tables, images and links. Opens .docx files, saves back to .docx, or exports as PDF straight from the browser's print dialog.</p>
+      <a class="open" href="docs.html">Open Docs <span class="arrow">→</span></a>
+    </div>
+    <div class="card" style="--tint: var(--sheets-tint)">
+      <div class="glyph">S</div>
+      <div class="kicker">.xlsx · .csv</div>
+      <h3>Sheets</h3>
+      <p>A grid with real formulas — SUM, AVERAGE, MIN, MAX, arithmetic and cell references. Import an existing spreadsheet or start from a blank grid, then export to .xlsx or .csv.</p>
+      <a class="open" href="sheets.html">Open Sheets <span class="arrow">→</span></a>
+    </div>
+    <div class="card" style="--tint: var(--slides-tint)">
+      <div class="glyph">P</div>
+      <div class="kicker">.pptx</div>
+      <h3>Slides</h3>
+      <p>Build a deck slide by slide — text, images and shapes on a free canvas — then present it full-screen or export to .pptx to open in any presentation software.</p>
+      <a class="open" href="slides.html">Open Slides <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="strip">
+  <div class="container">
+    <h2>Built to be forked, not just used.</h2>
+    <div class="strip__grid">
+      <div class="strip__item">
+        <div class="strip__num">01</div>
+        <h4>Nothing leaves your browser</h4>
+        <p>Every file you open is read and written locally with JavaScript. There's no backend, no upload, and no account.</p>
+      </div>
+      <div class="strip__item">
+        <div class="strip__num">02</div>
+        <h4>Free to host</h4>
+        <p>It's static HTML, CSS and JS — no build step, no server. Push it to a GitHub repository and turn on GitHub Pages.</p>
+      </div>
+      <div class="strip__item">
+        <div class="strip__num">03</div>
+        <h4>MIT licensed</h4>
+        <p>Use it, rename it, sell services around it, or fold it into a bigger project. Just keep the license notice.</p>
+      </div>
+      <div class="strip__item">
+        <div class="strip__num">04</div>
+        <h4>Independent project</h4>
+        <p>Nyxdesk is not affiliated with, sponsored by, or endorsed by any office-software vendor. See the README for details.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="container">
+  <div class="row">
+    <p>Nyxdesk reads and writes files compatible with common office document formats for interoperability only. Format names mentioned in the README refer to open file-format standards, not to any vendor's trademarks, and no vendor names, logos, or branding are used anywhere in this project.</p>
+    <div class="links">
+      <a href="docs.html">Docs</a>
+      <a href="sheets.html">Sheets</a>
+      <a href="slides.html">Slides</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/theme.js"></script>
+</body>
+</html>
