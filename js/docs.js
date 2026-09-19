@@ -1,13 +1,19 @@
 /* Nyxdesk Docs */
 (function(){
+  const Font = Quill.import("formats/font");
+  Font.whitelist = ["sans-serif","serif","monospace"];
+  Quill.register(Font, true);
+
   const toolbarOptions = [
     [{ header: [1,2,3,false] }],
+    [{ font: [] }, { size: ["small", false, "large", "huge"] }],
     ["bold","italic","underline","strike"],
     [{ color: [] }, { background: [] }],
-    [{ list: "ordered" }, { list: "bullet" }],
+    [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
     [{ indent: "-1" }, { indent: "+1" }],
     [{ align: [] }],
     ["blockquote","code-block","link","image"],
+    [{ script: "sub" }, { script: "super" }],
     ["clean"]
   ];
 
@@ -127,7 +133,7 @@
         nyxDownloadBlob(converted, title + ".docx");
       }catch(err){
         console.error(err);
-        alert("Couldn't generate a .docx file in this browser. Try 'Save as .html' instead, which Word can also open.");
+        alert("Couldn't generate a .docx file in this browser. Try 'Save as .html' instead — most word processors can open that too.");
       }
       return;
     }
@@ -136,4 +142,71 @@
   function escapeHtml(s){
     return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   }
+
+  // ---------- find & replace ----------
+  let lastFindIndex = 0;
+  window.toggleFind = function(){
+    const bar = document.getElementById("findBar");
+    const show = bar.style.display === "none";
+    bar.style.display = show ? "flex" : "none";
+    if(show) document.getElementById("findInput").focus();
+  };
+  window.findNext = function(){
+    const term = document.getElementById("findInput").value;
+    const status = document.getElementById("findStatus");
+    if(!term){ status.textContent = ""; return; }
+    const text = quill.getText();
+    let idx = text.indexOf(term, lastFindIndex);
+    if(idx === -1) idx = text.indexOf(term, 0);
+    if(idx === -1){ status.textContent = "Not found"; return; }
+    quill.setSelection(idx, term.length, "user");
+    lastFindIndex = idx + term.length;
+    status.textContent = "";
+  };
+  window.replaceOne = function(){
+    const term = document.getElementById("findInput").value;
+    const replacement = document.getElementById("replaceInput").value;
+    const sel = quill.getSelection();
+    if(sel && sel.length && quill.getText(sel.index, sel.length) === term){
+      quill.deleteText(sel.index, sel.length, "user");
+      quill.insertText(sel.index, replacement, "user");
+      quill.setSelection(sel.index + replacement.length, 0, "user");
+    }
+    findNext();
+  };
+  window.replaceAll = function(){
+    const term = document.getElementById("findInput").value;
+    const replacement = document.getElementById("replaceInput").value;
+    if(!term) return;
+    let text = quill.getText();
+    let idx = text.indexOf(term);
+    let count = 0;
+    while(idx !== -1){
+      quill.deleteText(idx, term.length, "user");
+      quill.insertText(idx, replacement, "user");
+      text = quill.getText();
+      idx = text.indexOf(term, idx + replacement.length);
+      count++;
+    }
+    document.getElementById("findStatus").textContent = count + " replaced";
+  };
+
+  // ---------- insert table (as an editable tab-separated grid, code-block based) ----------
+  window.insertTable = function(){
+    const rows = parseInt(prompt("Rows?", "3"), 10);
+    const cols = parseInt(prompt("Columns?", "3"), 10);
+    if(!rows || !cols || rows < 1 || cols < 1) return;
+    const range = quill.getSelection(true);
+    let text = "\n";
+    for(let r=0;r<rows;r++){
+      const cells = [];
+      for(let c=0;c<cols;c++) cells.push("Cell " + (r+1) + "." + (c+1));
+      text += cells.join("\t") + "\n";
+    }
+    quill.insertText(range.index, text, "user");
+    quill.formatLine(range.index, text.length, "code-block", true, "user");
+    quill.insertText(range.index + text.length, "\n", "user");
+    quill.formatLine(range.index + text.length, 1, "code-block", false, "user");
+    nyxToast("Table inserted as an editable text grid — edit cells directly.");
+  };
 })();

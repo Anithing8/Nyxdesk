@@ -32,6 +32,33 @@
     el._t = setTimeout(()=> el.classList.remove("show"), ms || 2200);
   };
 
+  // Wires a hamburger toggle button to a slide-over rail/sidebar on mobile,
+  // with a tap-outside backdrop. Safe to call once per page on DOMContentLoaded.
+  window.nyxSetupRailToggle = function(railSelector, toggleSelector){
+    const rail = document.querySelector(railSelector);
+    const toggle = document.querySelector(toggleSelector);
+    if(!rail || !toggle) return;
+    let backdrop = document.querySelector(".rail-backdrop");
+    if(!backdrop){
+      backdrop = document.createElement("div");
+      backdrop.className = "rail-backdrop";
+      document.body.appendChild(backdrop);
+    }
+    function close(){ rail.classList.remove("open"); backdrop.classList.remove("show"); }
+    function open(){ rail.classList.add("open"); backdrop.classList.add("show"); }
+    toggle.addEventListener("click", ()=>{
+      rail.classList.contains("open") ? close() : open();
+    });
+    backdrop.addEventListener("click", close);
+    rail.addEventListener("click", (e)=>{
+      // auto-close the drawer after picking an item on touch devices
+      if(e.target.closest("[data-close-rail]") || (window.innerWidth <= 760 && e.target.closest(".thumb, .tab, .note-item"))){
+        close();
+      }
+    });
+    window.addEventListener("resize", ()=>{ if(window.innerWidth > 760) close(); });
+  };
+
   window.nyxDownloadBlob = function(blob, filename){
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
