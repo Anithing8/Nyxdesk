@@ -85,9 +85,21 @@
 
     <div class="topbar__spacer"></div>
     <div class="topbar__actions">
+      <button class="icon-btn" onclick="insertTable()" title="Insert table">⊞</button>
+      <button class="icon-btn" onclick="toggleFind()" title="Find &amp; replace">🔍</button>
       <button class="icon-btn" onclick="nyxToggleTheme()" title="Toggle theme">◐</button>
-      <button class="btn btn--primary" onclick="saveAs('docx')">Save .docx</button>
+      <button class="btn btn--primary" onclick="saveAs('docx')"><span class="label-full">Save </span>.docx</button>
     </div>
+  </div>
+
+  <div class="toolbar2" id="findBar" style="display:none">
+    <input class="field" id="findInput" placeholder="Find" style="width:160px">
+    <input class="field" id="replaceInput" placeholder="Replace with" style="width:160px">
+    <button class="btn" onclick="findNext()">Find next</button>
+    <button class="btn" onclick="replaceOne()">Replace</button>
+    <button class="btn" onclick="replaceAll()">Replace all</button>
+    <span id="findStatus" style="font-size:12px;color:var(--ink-faint)"></span>
+    <button class="icon-btn" style="margin-left:auto" onclick="toggleFind()" title="Close">✕</button>
   </div>
 
   <div class="workspace">

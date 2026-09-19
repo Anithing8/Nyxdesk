@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nyxdesk Notes</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css">
+<style>
+  html, body{ height:100%; overflow:hidden; }
+  .app{ height:100vh; display:flex; flex-direction:column; }
+  .body2{ flex:1; display:flex; min-height:0; }
+
+  .rail{
+    width: 260px; flex:none; overflow-y:auto;
+    border-right: 1px solid var(--line); background: var(--bg-elevated);
+    display:flex; flex-direction:column;
+  }
+  .rail__search{ padding:10px; border-bottom:1px solid var(--line); }
+  .rail__search input{ width:100%; }
+  .rail__new{ margin:10px; }
+  .note-list{ flex:1; overflow-y:auto; padding: 4px 8px 12px; }
+  .note-item{
+    padding: 10px 10px; border-radius: var(--radius-sm); cursor:pointer;
+    margin-bottom: 4px; border: 1px solid transparent;
+  }
+  .note-item:hover{ background: var(--bg-elevated-2); }
+  .note-item.active{ background: var(--bg-elevated-2); border-color: var(--line); }
+  .note-item h4{ font-family: var(--font-sans); font-size: 13.5px; font-weight:600; margin:0 0 3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .note-item p{ font-size: 12px; color: var(--ink-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .note-item time{ font-size: 10.5px; color: var(--ink-faint); font-family: var(--font-mono); }
+  .empty-rail{ padding: 20px 14px; color: var(--ink-faint); font-size: 13px; text-align:center; }
+
+  .noteMain{ flex:1; display:flex; flex-direction:column; min-width:0; }
+  #noteTitleTop{
+    border:none; background:transparent; font-family: var(--font-serif);
+    font-size: 26px; font-weight:600; padding: 26px 40px 6px; outline:none; width:100%;
+  }
+  .note-meta{ padding: 0 40px 10px; color: var(--ink-faint); font-size: 12px; }
+  .ql-toolbar.ql-snow{ border:none !important; border-top:1px solid var(--line) !important; border-bottom:1px solid var(--line) !important; background: var(--bg-elevated); padding: 8px 32px !important; }
+  .ql-container.ql-snow{ border:none !important; flex:1; }
+  .noteEditorWrap{ flex:1; overflow-y:auto; }
+  .ql-editor{ padding: 24px 40px 80px; font-size: 15.5px; line-height:1.7; min-height: 400px; }
+  .no-note{ flex:1; display:flex; align-items:center; justify-content:center; color: var(--ink-faint); font-size:14px; flex-direction:column; gap:10px; }
+
+  @media (max-width: 760px){
+    .topbar__module{ display:none; }
+    #noteTitleTop{ padding: 20px 20px 6px; font-size: 22px; }
+    .note-meta{ padding: 0 20px 8px; }
+    .ql-editor{ padding: 16px 20px 60px; }
+    .ql-toolbar.ql-snow{ padding: 8px 14px !important; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <button class="rail-toggle" id="railToggle" aria-label="Toggle notes list">☰</button>
+    <a class="topbar__brand" href="index.html"><span class="dot"></span>Nyxdesk</a>
+    <span class="topbar__module">Notes</span>
+    <div class="topbar__spacer"></div>
+    <div class="topbar__actions">
+      <button class="icon-btn" onclick="nyxToggleTheme()" title="Toggle theme">◐</button>
+      <button class="icon-btn" onclick="deleteActiveNote()" title="Delete note">🗑</button>
+      <button class="btn" onclick="exportTxt()"><span class="label-full">Export </span>.txt</button>
+      <button class="btn btn--primary" onclick="window.print()">Print / PDF</button>
+    </div>
+  </div>
+
+  <div class="body2">
+    <aside class="rail" id="rail">
+      <div class="rail__search"><input class="field" id="searchInput" placeholder="Search notes…"></div>
+      <button class="btn btn--primary rail__new" onclick="createNote()">+ New note</button>
+      <div class="note-list" id="noteList"></div>
+    </aside>
+
+    <div class="noteMain" id="noteMain">
+      <input id="noteTitleTop" placeholder="Untitled note" autocomplete="off">
+      <div class="note-meta" id="noteMeta"></div>
+      <div class="noteEditorWrap"><div id="editor"></div></div>
+    </div>
+    <div class="no-note" id="noNote" style="display:none">
+      <div>No note selected.</div>
+      <button class="btn btn--primary" onclick="createNote()">+ New note</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/notes.js"></script>
+</body>
+</html>

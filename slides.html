@@ -94,6 +94,7 @@
 <body>
 <div class="app">
   <div class="topbar">
+    <button class="rail-toggle" id="railToggle" aria-label="Toggle slides">☰</button>
     <a class="topbar__brand" href="index.html"><span class="dot"></span>Nyxdesk</a>
     <span class="topbar__module">Slides</span>
 
@@ -122,13 +123,19 @@
     <button class="btn" onclick="addText()">+ Text</button>
     <button class="btn" onclick="triggerImage()">+ Image</button>
     <input type="file" id="imageInput" accept="image/*" class="hidden">
-    <button class="btn" onclick="addShape()">+ Rectangle</button>
+    <button class="btn" onclick="addShape('rect')">+ Rectangle</button>
+    <button class="btn" onclick="addShape('oval')">+ Oval</button>
+    <span class="sep"></span>
+    <button class="btn" onclick="duplicateSlide()">Duplicate slide</button>
+    <button class="btn" onclick="toggleNotes()">Speaker notes</button>
     <span class="sep"></span>
     <span class="label" style="font-size:12px;color:var(--ink-faint)">Slide background</span>
     <input type="color" id="bgColor" value="#ffffff" class="swatch" onchange="setBg(this.value)">
     <span class="sep"></span>
     <button class="btn btn--ghost" id="deleteBtn" onclick="deleteSelected()" disabled>Delete element</button>
   </div>
+
+  <textarea id="notesPanel" class="field" placeholder="Speaker notes for this slide…" style="display:none; width:100%; min-height:70px; border-radius:0; border-left:none; border-right:none; resize:vertical;"></textarea>
 
   <div class="body2">
     <aside class="rail" id="rail"></aside>

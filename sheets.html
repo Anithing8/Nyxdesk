@@ -19,7 +19,7 @@
   }
   .formulabar .ref{
     font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-dim);
-    width: 56px; text-align:center; border-right: 1px solid var(--line); padding-right: 10px;
+    width: 56px; text-align:center; border-right: 1px solid var(--line); padding-right: 10px; flex:none;
   }
   .formulabar input{
     flex:1; background: transparent; border: none; color: var(--ink);
@@ -56,8 +56,9 @@
   table.grid td.selected{ background: var(--bg-elevated-2); box-shadow: inset 0 0 0 2px var(--focus); }
   table.grid td.num{ text-align: right; font-variant-numeric: tabular-nums; }
 
-  @media (max-width: 700px){
+  @media (max-width: 760px){
     .topbar__module{ display:none; }
+    table.grid th, table.grid td{ min-width: 78px; width: 78px; }
   }
 </style>
 </head>
@@ -74,18 +75,33 @@
         <button class="menu__item" onclick="triggerOpen()">Open… <small>.xlsx / .csv</small></button>
         <div class="menu__sep"></div>
         <button class="menu__item" onclick="saveAs('xlsx')">Save as .xlsx</button>
-        <button class="menu__item" onclick="saveAs('csv')">Save as .csv</button>
+        <button class="menu__item" onclick="saveAs('csv')">Save as .csv (active sheet)</button>
+        <div class="menu__sep"></div>
+        <button class="menu__item" onclick="showFnHelp()">Formula reference</button>
       </div>
     </div>
     <input type="file" id="openInput" accept=".xlsx,.xls,.csv" class="hidden">
 
-    <input class="field" id="sheetTitle" value="Untitled spreadsheet" style="width:200px" aria-label="Spreadsheet title">
+    <input class="field" id="sheetTitle" value="Untitled spreadsheet" style="width:180px" aria-label="Spreadsheet title">
 
     <div class="topbar__spacer"></div>
     <div class="topbar__actions">
       <button class="icon-btn" onclick="nyxToggleTheme()" title="Toggle theme">◐</button>
-      <button class="btn btn--primary" onclick="saveAs('xlsx')">Save .xlsx</button>
+      <button class="btn btn--primary" onclick="saveAs('xlsx')"><span class="label-full">Save </span>.xlsx</button>
     </div>
+  </div>
+
+  <div class="toolbar2">
+    <button class="icon-btn" id="boldBtn" onclick="toggleFormat('bold')" title="Bold"><b>B</b></button>
+    <button class="icon-btn" id="italicBtn" onclick="toggleFormat('italic')" title="Italic"><i>I</i></button>
+    <label class="mini">Text</label>
+    <input type="color" id="textColor" class="swatch" value="#e9e6dd" onchange="applyColor('color', this.value)">
+    <label class="mini">Fill</label>
+    <input type="color" id="fillColor" class="swatch" value="#1a1d28" onchange="applyColor('bg', this.value)">
+    <button class="btn btn--ghost" onclick="clearFormat()">Clear format</button>
+    <span class="sep"></span>
+    <button class="btn" onclick="sortColumn(true)">Sort column A→Z</button>
+    <button class="btn" onclick="sortColumn(false)">Sort column Z→A</button>
   </div>
 
   <div class="formulabar">
@@ -96,6 +112,8 @@
   <div class="gridwrap">
     <table class="grid" id="grid"></table>
   </div>
+
+  <div class="tabs" id="sheetTabs"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
