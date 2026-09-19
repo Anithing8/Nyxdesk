@@ -51,8 +51,8 @@ Nyxdesk is plain HTML, CSS, and JavaScript — no build step, no `npm install`, 
 Because browsers restrict some features (like file APIs) on the `file://` protocol, serve the folder instead of opening the HTML files directly:
 
 ```bash
-git clone https://github.com/<your-username>/nyxdesk.git
-cd nyxdesk
+git clone https://github.com/Anithing8/Nyxdesk.git
+cd Nyxdesk
 python3 -m http.server 8080
 # then open http://localhost:8080
 ```
@@ -63,14 +63,14 @@ Any static server works (`npx serve`, VS Code's Live Server extension, etc.).
 1. Push this project to a GitHub repository.
 2. In the repository, go to **Settings → Pages**.
 3. Under **Build and deployment**, set **Source** to "Deploy from a branch," pick your default branch and the `/ (root)` folder.
-4. Save. GitHub will publish the site at `https://<your-username>.github.io/<repo-name>/` within a minute or two.
+4. Save. GitHub will publish the site at `https://Anithing8.github.io/Nyxdesk/` within a minute or two.
 
 No server, database, or paid tier required.
 
 ## Project structure
 
 ```
-nyxdesk/
+main/
 ├── index.html         # landing page
 ├── docs.html           # word processor
 ├── sheets.html         # spreadsheet
