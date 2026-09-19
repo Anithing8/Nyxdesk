@@ -1,1 +1,196 @@
+/* ==========================================================================
+   Nyxdesk — shared design tokens & base styles
+   "The desk after hours" — warm lamplight amber against deep ink charcoal.
+   ========================================================================== */
 
+:root{
+  --bg:            #12141c;
+  --bg-elevated:   #1a1d28;
+  --bg-elevated-2: #21242f;
+  --line:          #2c303e;
+  --line-soft:     #23252f;
+  --ink:           #e9e6dd;
+  --ink-dim:       #9a9cae;
+  --ink-faint:     #6b6d7c;
+  --accent:        #e0a458;   /* lamplight amber — primary */
+  --accent-ink:    #1a1508;
+  --focus:         #6c7bff;   /* cool blue — focus/selection only, not decorative */
+  --docs-tint:     #e0a458;
+  --sheets-tint:   #7fb37a;
+  --slides-tint:   #8a8ff0;
+  --danger:        #d9705f;
+  --radius-sm:     4px;
+  --radius-md:     6px;
+  --font-serif:    "Fraunces", ui-serif, Georgia, serif;
+  --font-sans:     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:     "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"]{
+  --bg:            #f6f3ec;
+  --bg-elevated:   #ffffff;
+  --bg-elevated-2: #efebe1;
+  --line:          #ddd6c4;
+  --line-soft:     #e6e0d2;
+  --ink:           #201d15;
+  --ink-dim:       #635f52;
+  --ink-faint:     #938f80;
+  --accent:        #b5762a;
+  --accent-ink:    #fff8ec;
+  color-scheme: light;
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+html{ -webkit-text-size-adjust: 100%; }
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+h1,h2,h3,h4{ font-family: var(--font-serif); font-weight: 600; margin: 0; }
+p{ margin: 0; }
+a{ color: inherit; }
+img{ max-width: 100%; display: block; }
+button, input, select, textarea{ font-family: inherit; color: inherit; }
+button{ cursor: pointer; }
+::selection{ background: var(--focus); color: #fff; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+:focus-visible{
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.container{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* -------------------- top bar (shared across the three apps) -------------------- */
+.topbar{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 56px;
+  padding: 0 16px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--line);
+  flex-wrap: nowrap;
+}
+.topbar__brand{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.topbar__brand .dot{
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+.topbar__module{
+  color: var(--ink-dim);
+  font-size: 13px;
+  border-left: 1px solid var(--line);
+  padding-left: 12px;
+  white-space: nowrap;
+}
+.topbar__spacer{ flex: 1; }
+.topbar__actions{ display: flex; align-items: center; gap: 8px; }
+
+.icon-btn{
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--ink-dim);
+}
+.icon-btn:hover{ background: var(--bg-elevated-2); color: var(--ink); border-color: var(--line); }
+
+.btn{
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg-elevated-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.btn:hover{ border-color: var(--ink-faint); }
+.btn--primary{
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.btn--primary:hover{ filter: brightness(1.06); }
+.btn--ghost{ background: transparent; }
+.btn:disabled{ opacity: 0.45; cursor: default; }
+
+.field{
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  padding: 7px 10px;
+  font-size: 13.5px;
+}
+
+/* dropdown menu used by File/Export menus */
+.menu{ position: relative; }
+.menu__panel{
+  position: absolute; top: calc(100% + 6px); left: 0;
+  min-width: 210px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+  padding: 6px;
+  display: none;
+  z-index: 60;
+}
+.menu.open .menu__panel{ display: block; }
+.menu__item{
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  width: 100%; text-align: left;
+  padding: 8px 10px;
+  background: none; border: none;
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-size: 13.5px;
+}
+.menu__item:hover{ background: var(--bg-elevated-2); }
+.menu__item small{ color: var(--ink-faint); font-size: 11.5px; }
+.menu__sep{ height: 1px; background: var(--line-soft); margin: 6px 2px; }
+
+.hidden{ display: none !important; }
+.sr-only{
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* toast */
+.toast{
+  position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(12px);
+  background: var(--bg-elevated); border: 1px solid var(--line);
+  color: var(--ink); padding: 10px 16px; border-radius: var(--radius-md);
+  font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .18s, transform .18s;
+  z-index: 200; box-shadow: 0 10px 24px rgba(0,0,0,.35);
+}
+.toast.show{ opacity: 1; transform: translateX(-50%) translateY(0); }
