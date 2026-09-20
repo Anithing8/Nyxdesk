@@ -63,14 +63,14 @@ Any static server works (`npx serve`, VS Code's Live Server extension, etc.).
 1. Push this project to a GitHub repository.
 2. In the repository, go to **Settings → Pages**.
 3. Under **Build and deployment**, set **Source** to "Deploy from a branch," pick your default branch and the `/ (root)` folder.
-4. Save. GitHub will publish the site at `https://Anithing8.github.io/Nyxdesk/` within a minute or two.
+4. Save. GitHub will publish the site at **https://anithing8.github.io/Nyxdesk/** within a minute or two.
 
 No server, database, or paid tier required.
 
 ## Project structure
 
 ```
-main/
+nyxdesk/
 ├── index.html         # landing page
 ├── docs.html           # word processor
 ├── sheets.html         # spreadsheet

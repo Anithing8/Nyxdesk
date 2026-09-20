@@ -52,9 +52,10 @@
       var(--bg);
     padding: 24px; overflow:auto; position:relative;
   }
-  .canvas-outer{ width: 100%; max-width: 960px; aspect-ratio: 16/9; }
+  .canvas-outer{ width: 100%; max-width: 960px; aspect-ratio: 16/9; position: relative; overflow: hidden; }
   #canvas{
-    width:960px; height:540px; background:#ffffff; position:relative;
+    position: absolute; top: 0; left: 0;
+    width:960px; height:540px; background:#ffffff;
     transform-origin: top left;
     box-shadow: 0 20px 44px rgba(0,0,0,0.35);
     overflow:hidden;
@@ -62,7 +63,7 @@
   .el{
     position:absolute; box-sizing:border-box;
     border: 1px solid transparent;
-    cursor: move; user-select:none;
+    cursor: move; user-select:none; touch-action: none;
   }
   .el.selected{ border-color: var(--focus); }
   .el[data-type="text"]{ padding:4px 6px; overflow:hidden; line-height:1.25; }
@@ -70,9 +71,9 @@
   .el[data-type="shape"]{ }
   .el img{ width:100%; height:100%; object-fit:contain; pointer-events:none; }
   .handle{
-    position:absolute; right:-5px; bottom:-5px; width:10px; height:10px;
+    position:absolute; right:-5px; bottom:-5px; width:16px; height:16px;
     background: var(--focus); border-radius:2px; cursor: nwse-resize;
-    display:none;
+    display:none; touch-action:none;
   }
   .el.selected .handle{ display:block; }
 

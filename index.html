@@ -18,29 +18,53 @@
   nav.top .links a:hover{ color: var(--ink); }
 
   .hero{ padding: 60px 0 44px; border-bottom: 1px solid var(--line); }
-  .hero__grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap: 48px; align-items:end; }
+  .hero__grid{ display:grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items:center; }
   .hero__eyebrow{ font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 18px; }
   .hero h1{ font-size: clamp(30px, 4.6vw, 44px); line-height: 1.12; letter-spacing: -0.005em; max-width: 17ch; }
   .hero p.lede{ margin-top: 18px; max-width: 52ch; color: var(--ink-dim); font-size: 15.5px; line-height: 1.65; }
   .hero__actions{ display:flex; gap:10px; margin-top: 26px; flex-wrap: wrap; }
-  .hero__note{ border-left: 2px solid var(--line); padding-left: 18px; color: var(--ink-dim); font-size: 13.5px; line-height: 1.7; }
-  .hero__note strong{ display:block; color: var(--ink); font-weight:600; margin-bottom: 6px; font-family: var(--font-sans); }
 
-  .toollist{ border-top: 1px solid var(--line); }
-  .toolrow{
-    display:grid; grid-template-columns: 64px 1fr auto; gap: 20px; align-items:start;
-    padding: 26px 0; border-bottom: 1px solid var(--line);
-    text-decoration:none; color:inherit;
+  .mock{ position:relative; height: 260px; }
+  .mock .win{
+    position:absolute; width: 78%; border-radius: 8px;
+    background: var(--bg-elevated); border: 1px solid var(--line);
+    box-shadow: 0 18px 36px rgba(0,0,0,0.28);
+    overflow:hidden;
   }
-  .toolrow:hover .toolname{ text-decoration: underline; text-decoration-color: var(--tint); text-underline-offset: 4px; }
-  .toolrow .tag{
-    font-family: var(--font-mono); font-size: 11px; color: var(--tint);
-    border: 1px solid var(--line); border-radius: var(--radius-sm);
-    width: 44px; height: 44px; display:flex; align-items:center; justify-content:center;
+  .mock .win .bar{ height: 22px; display:flex; align-items:center; gap:5px; padding: 0 9px; border-bottom: 1px solid var(--line); }
+  .mock .win .bar span{ width:7px; height:7px; border-radius:50%; background: var(--line); }
+  .mock .win .body{ padding: 12px 14px; }
+  .mock .win .ln{ height:7px; border-radius:2px; background: var(--line-soft); margin-bottom:7px; }
+  .mock .win.w1{ top:0; left:0; width:66%; z-index:3; }
+  .mock .win.w1 .bar span:first-child{ background: var(--docs-tint); }
+  .mock .win.w2{ top:34px; left:34%; width:60%; z-index:2; }
+  .mock .win.w2 .bar span:first-child{ background: var(--sheets-tint); }
+  .mock .win.w2 .grid3{ display:grid; grid-template-columns:repeat(4,1fr); gap:4px; }
+  .mock .win.w2 .grid3 div{ height:16px; background: var(--line-soft); border-radius:2px; }
+  .mock .win.w3{ top:120px; left:6%; width:56%; z-index:1; }
+  .mock .win.w3 .bar span:first-child{ background: var(--slides-tint); }
+  .mock .win.w3 .body{ display:flex; align-items:center; justify-content:center; height:64px; }
+  .mock .win.w3 .shape{ width:34px; height:34px; border-radius:50%; background: var(--slides-tint); opacity:.5; }
+
+  .toolgrid{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px;
+    background: var(--line); border: 1px solid var(--line); margin-top: 8px;
   }
-  .toolname{ font-family: var(--font-serif); font-size: 20px; font-weight:600; }
-  .tooldesc{ margin-top: 6px; color: var(--ink-dim); font-size: 14px; line-height:1.55; max-width: 64ch; }
-  .toolformats{ font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); white-space:nowrap; padding-top: 12px; }
+  .toolcard{
+    background: var(--bg); padding: 26px 22px; text-decoration:none; color:inherit;
+    display:flex; flex-direction:column; min-height: 190px; position:relative;
+  }
+  .toolcard::before{ content:""; position:absolute; top:0; left:0; right:0; height:3px; background: var(--tint); }
+  .toolcard .badge{
+    width: 40px; height:40px; border-radius: 10px; background: var(--tint);
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--font-mono); font-size: 12.5px; font-weight:600; color: #14151c;
+    margin-bottom: 16px;
+  }
+  .toolname{ font-family: var(--font-serif); font-size: 19px; font-weight:600; }
+  .tooldesc{ margin-top: 8px; color: var(--ink-dim); font-size: 13.5px; line-height:1.55; flex:1; }
+  .toolformats{ margin-top: 14px; font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); }
+  .toolcard:hover .toolname{ text-decoration: underline; text-decoration-color: var(--tint); text-underline-offset: 4px; }
 
   section.about{ padding: 56px 0; border-bottom: 1px solid var(--line); display:grid; grid-template-columns: 1fr 1fr; gap: 48px; }
   section.about h2{ font-size: 21px; margin-bottom: 14px; }
@@ -54,15 +78,15 @@
   footer .links a:first-child{ margin-left: 0; }
 
   @media (max-width: 860px){
-    .hero__grid{ grid-template-columns: 1fr; gap: 18px; }
-    .hero__note{ border-left:none; border-top: 1px solid var(--line); padding-left:0; padding-top: 16px; }
+    .hero__grid{ grid-template-columns: 1fr; gap: 28px; }
+    .mock{ height: 200px; }
     section.about{ grid-template-columns: 1fr; }
   }
   @media (max-width: 560px){
-    .toolrow{ grid-template-columns: 44px 1fr; }
-    .toolformats{ grid-column: 2; padding-top:0; }
     nav.top .links a:not(.gh){ display:none; }
     footer .row{ flex-direction: column; }
+    .toolgrid{ grid-template-columns: 1fr; }
+    .hero{ padding: 40px 0 32px; }
   }
 </style>
 </head>
@@ -77,7 +101,7 @@
       <a href="slides.html">Slides</a>
       <a href="notes.html">Notes</a>
       <a href="pdf.html">PDF</a>
-      <a class="gh" href="https://github.com/" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="gh" href="https://github.com/Anithing8/Nyxdesk" target="_blank" rel="noopener">GitHub ↗</a>
       <button class="icon-btn" onclick="nyxToggleTheme()" aria-label="Toggle theme" title="Toggle light / dark">◐</button>
     </div>
   </nav>
@@ -92,57 +116,48 @@
         <p class="lede">Nyxdesk opens, edits, and saves the document formats people already send you — text, spreadsheets, slides, notes, PDFs — without an account, a subscription, or a server that ever sees your files.</p>
         <div class="hero__actions">
           <a class="btn btn--primary" href="docs.html">Open Docs</a>
-          <a class="btn" href="https://github.com/" target="_blank" rel="noopener">View source</a>
+          <a class="btn" href="https://github.com/Anithing8/Nyxdesk" target="_blank" rel="noopener">View source</a>
         </div>
       </div>
-      <div class="hero__note">
-        <strong>How it actually works</strong>
-        Every file is read and written by JavaScript running on your machine. There's no upload step to skip, because there's nothing to upload to — the whole thing is static HTML that GitHub Pages can serve for free.
+      <div class="mock" aria-hidden="true">
+        <div class="win w3"><div class="bar"><span></span><span></span></div><div class="body"><div class="shape"></div></div></div>
+        <div class="win w2"><div class="bar"><span></span><span></span></div><div class="body"><div class="grid3"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div></div>
+        <div class="win w1"><div class="bar"><span></span><span></span></div><div class="body"><div class="ln" style="width:80%"></div><div class="ln" style="width:92%"></div><div class="ln" style="width:60%"></div></div></div>
       </div>
     </div>
   </div>
 </header>
 
 <div class="container">
-  <div class="toollist">
-    <a class="toolrow" href="docs.html" style="--tint: var(--docs-tint)">
-      <span class="tag">Dc</span>
-      <div>
-        <div class="toolname">Docs</div>
-        <p class="tooldesc">A writer with headings, lists, tables, links and images. Find &amp; replace, font and size controls, print-to-PDF.</p>
-      </div>
+  <div class="toolgrid">
+    <a class="toolcard" href="docs.html" style="--tint: var(--docs-tint)">
+      <span class="badge">Dc</span>
+      <div class="toolname">Docs</div>
+      <p class="tooldesc">A writer with headings, lists, tables, links and images. Find &amp; replace, font and size controls, print-to-PDF.</p>
       <div class="toolformats">.docx · .html · .txt</div>
     </a>
-    <a class="toolrow" href="sheets.html" style="--tint: var(--sheets-tint)">
-      <span class="tag">Sh</span>
-      <div>
-        <div class="toolname">Sheets</div>
-        <p class="tooldesc">A grid with real formulas — SUM, IF, SUMIF, ROUND and more — multiple sheets per file, cell formatting, and column sorting.</p>
-      </div>
+    <a class="toolcard" href="sheets.html" style="--tint: var(--sheets-tint)">
+      <span class="badge">Sh</span>
+      <div class="toolname">Sheets</div>
+      <p class="tooldesc">A grid with real formulas — SUM, IF, SUMIF, ROUND and more — multiple sheets per file, cell formatting, and column sorting.</p>
       <div class="toolformats">.xlsx · .csv</div>
     </a>
-    <a class="toolrow" href="slides.html" style="--tint: var(--slides-tint)">
-      <span class="tag">Sl</span>
-      <div>
-        <div class="toolname">Slides</div>
-        <p class="tooldesc">Free-form slides with text, images and shapes, speaker notes, a full-screen presenter mode, and duplicate/reorder controls.</p>
-      </div>
+    <a class="toolcard" href="slides.html" style="--tint: var(--slides-tint)">
+      <span class="badge">Sl</span>
+      <div class="toolname">Slides</div>
+      <p class="tooldesc">Free-form slides with text, images and shapes, speaker notes, a full-screen presenter mode, and duplicate controls.</p>
       <div class="toolformats">.pptx</div>
     </a>
-    <a class="toolrow" href="notes.html" style="--tint: #b98fd1">
-      <span class="tag">Nt</span>
-      <div>
-        <div class="toolname">Notes</div>
-        <p class="tooldesc">A running list of quick, searchable notes with rich formatting — for the things that don't need their own document.</p>
-      </div>
+    <a class="toolcard" href="notes.html" style="--tint: #b98fd1">
+      <span class="badge">Nt</span>
+      <div class="toolname">Notes</div>
+      <p class="tooldesc">A running list of quick, searchable notes with rich formatting — for the things that don't need their own document.</p>
       <div class="toolformats">.txt · print/PDF</div>
     </a>
-    <a class="toolrow" href="pdf.html" style="--tint: #6fb5c9">
-      <span class="tag">Pd</span>
-      <div>
-        <div class="toolname">PDF</div>
-        <p class="tooldesc">Open a PDF, add text, highlights, shapes or a drawn signature, rotate or remove pages, then save the marked-up file.</p>
-      </div>
+    <a class="toolcard" href="pdf.html" style="--tint: #6fb5c9">
+      <span class="badge">Pd</span>
+      <div class="toolname">PDF</div>
+      <p class="tooldesc">Open a PDF, add text, highlights, shapes or a drawn signature, rotate or remove pages, then save the marked-up file.</p>
       <div class="toolformats">.pdf</div>
     </a>
   </div>
@@ -172,7 +187,7 @@
     <div class="links">
       <a href="notes.html">Notes</a>
       <a href="pdf.html">PDF</a>
-      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/Anithing8/Nyxdesk" target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
 </footer>
