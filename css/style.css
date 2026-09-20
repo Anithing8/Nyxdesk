@@ -261,45 +261,51 @@ button{ cursor: pointer; }
 
 /* -------------------- responsive: phone -------------------- */
 @media (max-width: 760px){
-  html{ font-size: 15px; }
-
   .topbar{
     height: auto; min-height: 52px; flex-wrap: wrap; row-gap: 8px;
-    padding: 8px 10px;
+    padding: 8px 10px; column-gap: 8px;
   }
-  .topbar__brand{ font-size: 15px; }
+  .topbar__brand{ font-size: 15px; order: 1; }
   .topbar__module{ display:none; }
-  .topbar #docTitle, .topbar #sheetTitle, .topbar #deckTitle, .topbar #pdfTitle, .topbar #noteTitleTop{
-    order: 5; width: 100% !important; margin-top: 2px;
+  .rail-toggle{ order: 0; }
+  .topbar > .menu{ order: 2; margin-left: auto; }
+  .topbar #docTitle, .topbar #sheetTitle, .topbar #deckTitle, .topbar #pdfTitle{
+    order: 5; width: 100% !important; flex-basis: 100%; margin-top: 2px;
   }
   .topbar__spacer{ display:none; }
-  .topbar__actions{ margin-left:auto; display:flex; gap:6px; }
+  .topbar__actions{ order: 3; margin-left: auto; display:flex; gap:6px; flex-wrap: nowrap; }
   .topbar__actions .btn span.label-full{ display:none; }
 
   .btn{ padding: 9px 12px; font-size: 13px; min-height: 38px; }
-  .icon-btn{ width: 38px; height: 38px; }
+  .icon-btn{ width: 38px; height: 38px; flex: none; }
 
   .toolbar2{ flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 8px 10px; }
   .toolbar2::-webkit-scrollbar{ display:none; }
-  .toolbar2 .btn, .toolbar2 .icon-btn{ flex: none; }
+  .toolbar2 .btn, .toolbar2 .icon-btn, .toolbar2 .swatch{ flex: none; }
+  .toolbar2 label.mini{ flex: none; }
 
   /* rails/sidebars become a slide-over drawer, opened via a hamburger button */
   .rail-toggle{
     display:inline-flex !important; align-items:center; justify-content:center;
     width:38px; height:38px; background: transparent; border:1px solid var(--line);
-    border-radius: var(--radius-sm); color: var(--ink-dim); flex: none;
+    border-radius: var(--radius-sm); color: var(--ink-dim); flex: none; font-size: 16px;
   }
   .rail{
-    position: fixed; top: 0; bottom: 0; left: 0; width: 250px; max-width: 82vw;
+    position: fixed; top: 0; bottom: 0; left: 0; width: 260px; max-width: 84vw;
     z-index: 40; transform: translateX(-104%);
     transition: transform .22s ease;
     box-shadow: 10px 0 28px rgba(0,0,0,0.4);
-    padding-top: 64px;
+    padding-top: 8px;
   }
   .rail.open{ transform: translateX(0); }
 
-  .menu__panel{ min-width: 240px; }
+  .menu__panel{ min-width: 220px; max-width: calc(100vw - 24px); right: 0; left: auto; }
+
+  /* on very small screens, tabs/labels shrink instead of forcing horizontal scroll where avoidable */
+  .tabs{ padding: 6px 6px 0; }
+  .tab{ padding: 7px 10px; }
 }
+
 
 @media (max-width: 460px){
   .hero__actions .btn{ flex: 1 1 auto; justify-content:center; }
