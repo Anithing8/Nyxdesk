@@ -21,6 +21,7 @@
       document.querySelectorAll(".tool").forEach(b=>b.classList.remove("active"));
       btn.classList.add("active");
       currentTool = btn.dataset.tool;
+      document.querySelectorAll(".overlay").forEach(o => { o.style.touchAction = currentTool === "select" ? "auto" : "none"; });
     });
   });
 
@@ -109,9 +110,7 @@
   async function renderAll(){
     stage.innerHTML = "";
     rail.innerHTML = "";
-    document.getElementById("dropZone").remove ? null : null;
     if(!doc){
-      stage.innerHTML = document.getElementById("dropZone") ? "" : "";
       buildDropZone();
       return;
     }
@@ -218,6 +217,7 @@
     const overlay = document.createElement("div");
     overlay.className = "overlay";
     overlay.dataset.key = key;
+    overlay.style.touchAction = currentTool === "select" ? "auto" : "none";
 
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", `0 0 ${pageW} ${pageH}`);
