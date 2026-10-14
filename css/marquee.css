@@ -1,0 +1,31 @@
+#thumbSide{width:184px}
+.side-b{padding:10px;display:flex;flex-direction:column;gap:10px}
+.thumb{border:2px solid var(--line);border-radius:6px;overflow:hidden;cursor:pointer;background:#fff;position:relative;aspect-ratio:16/9}
+.thumb.on{border-color:var(--app)}
+.thumb .tnum{position:absolute;left:4px;top:3px;font-size:10px;color:var(--faint);z-index:2;background:rgba(255,255,255,.75);padding:0 3px;border-radius:3px}
+.thumb-canvas{position:absolute;inset:0;transform-origin:top left;pointer-events:none}
+.thumbdel{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:4px;background:rgba(0,0,0,.45);color:#fff;display:none;align-items:center;justify-content:center;z-index:3}
+.thumb:hover .thumbdel{display:flex}
+.thumbdel svg{width:11px;height:11px}
+.canvasWrap{flex:1;display:flex;flex-direction:column;overflow:auto;background:var(--bg);align-items:center;padding:22px 16px}
+.slideFrame{flex:none}
+.slide{width:var(--w);height:var(--h);background:#fff;color:#1c1b19;position:relative;box-shadow:var(--shadow-lg);overflow:hidden;font-family:var(--font);transform:scale(var(--zoom,1));transform-origin:top center}
+.sld-obj{position:absolute;cursor:move}
+.sld-obj.sel{outline:2px solid var(--focus)}
+.sld-obj .handle{position:absolute;width:9px;height:9px;background:var(--focus);border:1px solid #fff;z-index:5}
+.sld-obj .handle.se{right:-5px;bottom:-5px;cursor:nwse-resize}
+.sld-text{outline:none;width:100%;height:100%;padding:4px;overflow:hidden}
+.sld-text[contenteditable="true"]:focus{outline:1px dashed var(--focus)}
+.sld-shape{width:100%;height:100%}
+.notesPanel{flex:none;width:min(100%,var(--w,960px));margin-top:10px}
+#notesArea{width:100%;height:90px}
+.status .zoomctl input[type=range]{width:100px}
+.present-ui{position:fixed;inset:0;background:#0b0a09;z-index:800;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.present-slide{background:#fff;box-shadow:0 10px 60px rgba(0,0,0,.5);position:relative;overflow:hidden}
+.present-ctl{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);padding:6px 10px;border-radius:30px;color:#fff}
+.present-ctl .ib{color:#fff}
+.present-ctl span{font-size:13px;min-width:46px;text-align:center}
+@media (max-width:860px){
+  #thumbSide{position:absolute;width:min(78vw,220px)}
+  .canvasWrap{padding:14px 8px}
+}
