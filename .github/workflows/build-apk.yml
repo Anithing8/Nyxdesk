@@ -56,32 +56,41 @@ jobs:
 
           async function run() {
             let inputBuffer = null;
-            const candidates = ['icon.png', 'logo.png', 'favicon.png', 'icon.svg', 'logo.svg', 'favicon.svg'];
+            const candidates = [
+              'icon.svg', 'icon.png', 'logo.svg', 'logo.png', 'favicon.svg', 'favicon.png',
+              'www/icon.svg', 'www/icon.png', 'www/logo.svg', 'www/logo.png'
+            ];
+
             for (const file of candidates) {
               if (fs.existsSync(file)) {
-                inputBuffer = fs.readFileSync(file);
+                console.log('Using custom icon file:', file);
+                if (file.endsWith('.svg')) {
+                  let svgText = fs.readFileSync(file, 'utf8').trim();
+                  if (!svgText.includes('xmlns=')) {
+                    svgText = svgText.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+                  }
+                  svgText = svgText.replace(/currentColor/g, '#ffffff');
+                  inputBuffer = Buffer.from(svgText);
+                } else {
+                  inputBuffer = fs.readFileSync(file);
+                }
                 break;
               }
             }
 
             if (!inputBuffer && fs.existsSync('www/index.html')) {
               const html = fs.readFileSync('www/index.html', 'utf8');
-              const imgMatch = html.match(/rel=["'](?:shortcut |apple-touch-)?icon["'][^>]*href=["']([^"']+\.(?:png|svg|ico))["']/i);
-              if (imgMatch && imgMatch[1] && !imgMatch[1].startsWith('http') && !imgMatch[1].startsWith('data:')) {
-                const cleanPath = 'www/' + imgMatch[1].replace(/^\.?\/?/, '');
-                if (fs.existsSync(cleanPath)) {
-                  inputBuffer = fs.readFileSync(cleanPath);
-                }
-              }
-              if (!inputBuffer) {
-                const dataUriMatch = html.match(/rel=["'](?:shortcut )?icon["'][^>]*href=["']data:image\/svg\+xml[^,"']*,(.*?)["']/i);
-                if (dataUriMatch && dataUriMatch[1]) {
-                  inputBuffer = Buffer.from(decodeURIComponent(dataUriMatch[1]));
-                } else {
-                  const svgMatch = html.match(/<svg[\s\S]*?<\/svg>/i);
-                  if (svgMatch && !svgMatch[0].includes('currentColor')) {
-                    inputBuffer = Buffer.from(svgMatch[0]);
+              const dataUriMatch = html.match(/rel=["'](?:shortcut )?icon["'][^>]*href=["']data:image\/svg\+xml[^,"']*,(.*?)["']/i);
+              if (dataUriMatch && dataUriMatch[1]) {
+                inputBuffer = Buffer.from(decodeURIComponent(dataUriMatch[1]));
+              } else {
+                const svgMatch = html.match(/<svg[\s\S]*?<\/svg>/i);
+                if (svgMatch && !svgMatch[0].includes('currentColor')) {
+                  let extractedSvg = svgMatch[0];
+                  if (!extractedSvg.includes('xmlns=')) {
+                    extractedSvg = extractedSvg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
                   }
+                  inputBuffer = Buffer.from(extractedSvg);
                 }
               }
             }
@@ -94,15 +103,43 @@ jobs:
               </svg>
             `);
 
+            const sourceBuffer = inputBuffer || fallbackSvg;
+
             try {
-              await sharp(inputBuffer || fallbackSvg).resize(1024, 1024, { fit: 'contain', background: '#0f0f17' }).png().toFile('assets/icon-only.png');
+              await sharp(sourceBuffer, { density: 300 })
+                .resize(768, 768, { fit: 'contain', background: { r: 15, g: 15, b: 23, alpha: 1 } })
+                .extend({
+                  top: 128, bottom: 128, left: 128, right: 128,
+                  background: { r: 15, g: 15, b: 23, alpha: 1 }
+                })
+                .png()
+                .toFile('assets/icon-only.png');
+
+              await sharp(sourceBuffer, { density: 300 })
+                .resize(640, 640, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+                .extend({
+                  top: 192, bottom: 192, left: 192, right: 192,
+                  background: { r: 0, g: 0, b: 0, alpha: 0 }
+                })
+                .png()
+                .toFile('assets/icon-foreground.png');
             } catch (e) {
+              console.error('Custom SVG parse failed, using fallback:', e);
               await sharp(fallbackSvg).resize(1024, 1024).png().toFile('assets/icon-only.png');
+              await sharp(fallbackSvg).resize(1024, 1024).png().toFile('assets/icon-foreground.png');
             }
+
+            await sharp({
+              create: { width: 1024, height: 1024, channels: 4, background: '#0f0f17' }
+            }).png().toFile('assets/icon-background.png');
 
             await sharp({
               create: { width: 2732, height: 2732, channels: 4, background: '#0f0f17' }
             }).png().toFile('assets/splash.png');
+
+            await sharp({
+              create: { width: 2732, height: 2732, channels: 4, background: '#0f0f17' }
+            }).png().toFile('assets/splash-dark.png');
           }
           run();
           EOF
