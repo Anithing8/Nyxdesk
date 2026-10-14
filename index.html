@@ -2,196 +2,129 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Nyxdesk</title>
-<meta name="description" content="Nyxdesk: five document tools that run in the browser — write, calculate, present, note, and mark up PDFs — with nothing uploaded anywhere. Free to fork and host on GitHub Pages.">
+<meta name="description" content="Write documents, work with spreadsheets, build presentations and edit PDFs in your browser. Files stay on your device.">
+<meta name="theme-color" content="#efede8">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-<style>
-  nav.top{ display:flex; align-items:center; gap: 20px; padding: 20px 0; }
-  nav.top .brand{ display:flex; align-items:center; gap:9px; font-family: var(--font-serif); font-weight:600; font-size: 18px; text-decoration:none; }
-  nav.top .brand .dot{ width:9px; height:9px; border-radius:50%; background: var(--accent); }
-  nav.top .links{ margin-left:auto; display:flex; gap: 20px; align-items:center; flex-wrap:wrap; }
-  nav.top .links a{ color: var(--ink-dim); text-decoration:none; font-size: 13.5px; }
-  nav.top .links a:hover{ color: var(--ink); }
-
-  .hero{ padding: 60px 0 44px; border-bottom: 1px solid var(--line); }
-  .hero__grid{ display:grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items:center; }
-  .hero__eyebrow{ font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 18px; }
-  .hero h1{ font-size: clamp(30px, 4.6vw, 44px); line-height: 1.12; letter-spacing: -0.005em; max-width: 17ch; }
-  .hero p.lede{ margin-top: 18px; max-width: 52ch; color: var(--ink-dim); font-size: 15.5px; line-height: 1.65; }
-  .hero__actions{ display:flex; gap:10px; margin-top: 26px; flex-wrap: wrap; }
-
-  .mock{ position:relative; height: 260px; }
-  .mock .win{
-    position:absolute; width: 78%; border-radius: 8px;
-    background: var(--bg-elevated); border: 1px solid var(--line);
-    box-shadow: 0 18px 36px rgba(0,0,0,0.28);
-    overflow:hidden;
-  }
-  .mock .win .bar{ height: 22px; display:flex; align-items:center; gap:5px; padding: 0 9px; border-bottom: 1px solid var(--line); }
-  .mock .win .bar span{ width:7px; height:7px; border-radius:50%; background: var(--line); }
-  .mock .win .body{ padding: 12px 14px; }
-  .mock .win .ln{ height:7px; border-radius:2px; background: var(--line-soft); margin-bottom:7px; }
-  .mock .win.w1{ top:0; left:0; width:66%; z-index:3; }
-  .mock .win.w1 .bar span:first-child{ background: var(--docs-tint); }
-  .mock .win.w2{ top:34px; left:34%; width:60%; z-index:2; }
-  .mock .win.w2 .bar span:first-child{ background: var(--sheets-tint); }
-  .mock .win.w2 .grid3{ display:grid; grid-template-columns:repeat(4,1fr); gap:4px; }
-  .mock .win.w2 .grid3 div{ height:16px; background: var(--line-soft); border-radius:2px; }
-  .mock .win.w3{ top:120px; left:6%; width:56%; z-index:1; }
-  .mock .win.w3 .bar span:first-child{ background: var(--slides-tint); }
-  .mock .win.w3 .body{ display:flex; align-items:center; justify-content:center; height:64px; }
-  .mock .win.w3 .shape{ width:34px; height:34px; border-radius:50%; background: var(--slides-tint); opacity:.5; }
-
-  .toolgrid{
-    display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px;
-    background: var(--line); border: 1px solid var(--line); margin-top: 8px;
-  }
-  .toolcard{
-    background: var(--bg); padding: 26px 22px; text-decoration:none; color:inherit;
-    display:flex; flex-direction:column; min-height: 190px; position:relative;
-  }
-  .toolcard::before{ content:""; position:absolute; top:0; left:0; right:0; height:3px; background: var(--tint); }
-  .toolcard .badge{
-    width: 40px; height:40px; border-radius: 10px; background: var(--tint);
-    display:flex; align-items:center; justify-content:center;
-    font-family: var(--font-mono); font-size: 12.5px; font-weight:600; color: #14151c;
-    margin-bottom: 16px;
-  }
-  .toolname{ font-family: var(--font-serif); font-size: 19px; font-weight:600; }
-  .tooldesc{ margin-top: 8px; color: var(--ink-dim); font-size: 13.5px; line-height:1.55; flex:1; }
-  .toolformats{ margin-top: 14px; font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); }
-  .toolcard:hover .toolname{ text-decoration: underline; text-decoration-color: var(--tint); text-underline-offset: 4px; }
-
-  section.about{ padding: 56px 0; border-bottom: 1px solid var(--line); display:grid; grid-template-columns: 1fr 1fr; gap: 48px; }
-  section.about h2{ font-size: 21px; margin-bottom: 14px; }
-  section.about p{ color: var(--ink-dim); font-size: 14px; line-height: 1.7; margin-bottom: 12px; }
-  section.about ul{ margin: 0; padding-left: 18px; color: var(--ink-dim); font-size: 14px; line-height: 1.85; }
-
-  footer{ padding: 36px 0 56px; }
-  footer .row{ display:flex; justify-content:space-between; align-items:flex-start; gap: 20px; flex-wrap: wrap; }
-  footer p{ color: var(--ink-faint); font-size: 12.5px; max-width: 56ch; line-height:1.65; }
-  footer .links a{ color: var(--ink-dim); text-decoration:none; font-size: 13px; margin-left: 18px; }
-  footer .links a:first-child{ margin-left: 0; }
-
-  @media (max-width: 860px){
-    .hero__grid{ grid-template-columns: 1fr; gap: 28px; }
-    .mock{ height: 200px; }
-    section.about{ grid-template-columns: 1fr; }
-  }
-  @media (max-width: 560px){
-    nav.top .links a:not(.gh){ display:none; }
-    footer .row{ flex-direction: column; }
-    .toolgrid{ grid-template-columns: 1fr; }
-    .hero{ padding: 40px 0 32px; }
-  }
-</style>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/home.css">
+<script src="js/icons.js"></script>
+<script src="js/core.js"></script>
 </head>
-<body>
+<body class="home">
 
-<div class="container">
-  <nav class="top">
-    <a class="brand" href="index.html"><span class="dot"></span>Nyxdesk</a>
-    <div class="links">
-      <a href="docs.html">Docs</a>
-      <a href="sheets.html">Sheets</a>
-      <a href="slides.html">Slides</a>
-      <a href="notes.html">Notes</a>
-      <a href="pdf.html">PDF</a>
-      <a class="gh" href="https://github.com/Anithing8/Nyxdesk" target="_blank" rel="noopener">GitHub ↗</a>
-      <button class="icon-btn" onclick="nyxToggleTheme()" aria-label="Toggle theme" title="Toggle light / dark">◐</button>
-    </div>
-  </nav>
-</div>
-
-<header class="hero">
-  <div class="container">
-    <div class="hero__grid">
-      <div>
-        <div class="hero__eyebrow">Open source · runs in your browser · free to host</div>
-        <h1>Five document tools, no server in between.</h1>
-        <p class="lede">Nyxdesk opens, edits, and saves the document formats people already send you — text, spreadsheets, slides, notes, PDFs — without an account, a subscription, or a server that ever sees your files.</p>
-        <div class="hero__actions">
-          <a class="btn btn--primary" href="docs.html">Open Docs</a>
-          <a class="btn" href="https://github.com/Anithing8/Nyxdesk" target="_blank" rel="noopener">View source</a>
-        </div>
-      </div>
-      <div class="mock" aria-hidden="true">
-        <div class="win w3"><div class="bar"><span></span><span></span></div><div class="body"><div class="shape"></div></div></div>
-        <div class="win w2"><div class="bar"><span></span><span></span></div><div class="body"><div class="grid3"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div></div>
-        <div class="win w1"><div class="bar"><span></span><span></span></div><div class="body"><div class="ln" style="width:80%"></div><div class="ln" style="width:92%"></div><div class="ln" style="width:60%"></div></div></div>
-      </div>
-    </div>
-  </div>
+<header class="top">
+  <a class="brand" href="./"><span class="mark"><svg viewBox="0 0 24 24"><path d="M6 19V5l12 14V5"/></svg></span><span>Nyxdesk</span></a>
+  <span class="sp"></span>
+  <button class="ib" data-theme-toggle title="Switch light / dark" aria-label="Switch light or dark theme"><i data-i="moon"></i></button>
 </header>
 
-<div class="container">
-  <div class="toolgrid">
-    <a class="toolcard" href="docs.html" style="--tint: var(--docs-tint)">
-      <span class="badge">Dc</span>
-      <div class="toolname">Docs</div>
-      <p class="tooldesc">A writer with headings, lists, tables, links and images. Find &amp; replace, font and size controls, print-to-PDF.</p>
-      <div class="toolformats">.docx · .html · .txt</div>
-    </a>
-    <a class="toolcard" href="sheets.html" style="--tint: var(--sheets-tint)">
-      <span class="badge">Sh</span>
-      <div class="toolname">Sheets</div>
-      <p class="tooldesc">A grid with real formulas — SUM, IF, SUMIF, ROUND and more — multiple sheets per file, cell formatting, and column sorting.</p>
-      <div class="toolformats">.xlsx · .csv</div>
-    </a>
-    <a class="toolcard" href="slides.html" style="--tint: var(--slides-tint)">
-      <span class="badge">Sl</span>
-      <div class="toolname">Slides</div>
-      <p class="tooldesc">Free-form slides with text, images and shapes, speaker notes, a full-screen presenter mode, and duplicate controls.</p>
-      <div class="toolformats">.pptx</div>
-    </a>
-    <a class="toolcard" href="notes.html" style="--tint: #b98fd1">
-      <span class="badge">Nt</span>
-      <div class="toolname">Notes</div>
-      <p class="tooldesc">A running list of quick, searchable notes with rich formatting — for the things that don't need their own document.</p>
-      <div class="toolformats">.txt · print/PDF</div>
-    </a>
-    <a class="toolcard" href="pdf.html" style="--tint: #6fb5c9">
-      <span class="badge">Pd</span>
-      <div class="toolname">PDF</div>
-      <p class="tooldesc">Open a PDF, add text, highlights, shapes or a drawn signature, rotate or remove pages, then save the marked-up file.</p>
-      <div class="toolformats">.pdf</div>
-    </a>
+<main class="wrap">
+  <div class="lead">
+    <h1>Your files, on your desk.</h1>
+    <p>Four small tools for documents, spreadsheets, presentations and PDFs. Everything opens and saves on this device &mdash; nothing is uploaded.</p>
   </div>
-</div>
 
-<section class="about container">
-  <div>
-    <h2>What's actually here</h2>
-    <p>This isn't a reimplementation of a large commercial office suite — that's a multi-decade undertaking, and claiming otherwise wouldn't be honest. It's a working set of five tools covering the parts of that job people reach for most often, built on well-established open formats so what you save opens elsewhere too.</p>
-    <p>Everything autosaves to your browser's local storage as you work. Closing the tab won't lose your place; a different browser or device will start fresh, since nothing syncs anywhere.</p>
-  </div>
-  <div>
-    <h2>What's on the roadmap</h2>
-    <ul>
-      <li>Cross-sheet formula references and basic charts in Sheets</li>
-      <li>Native tables in Docs, beyond the text-grid fallback</li>
-      <li>Layout- and image-preserving PDF and slide import</li>
-      <li>Page reordering and multi-file merge in the PDF tool</li>
-      <li>Optional peer-to-peer sync for people who want it — still no required server</li>
-    </ul>
-  </div>
-</section>
+  <div class="cols">
+    <section class="new" aria-labelledby="h-new">
+      <h2 id="h-new">Start something</h2>
+      <a class="tile" href="inkwell.html" style="--c:#2b6f8e">
+        <span class="tile-i"><i data-i="filetext"></i></span>
+        <span class="tile-t"><b>Inkwell</b><small>Documents &middot; .docx, .md, .txt</small></span>
+        <i data-i="chevR" data-c="go"></i>
+      </a>
+      <a class="tile" href="abacus.html" style="--c:#5c7a2e">
+        <span class="tile-i"><i data-i="table"></i></span>
+        <span class="tile-t"><b>Abacus</b><small>Spreadsheets &middot; .xlsx, .csv</small></span>
+        <i data-i="chevR" data-c="go"></i>
+      </a>
+      <a class="tile" href="marquee.html" style="--c:#b4552d">
+        <span class="tile-i"><i data-i="present"></i></span>
+        <span class="tile-t"><b>Marquee</b><small>Presentations &middot; .pptx</small></span>
+        <i data-i="chevR" data-c="go"></i>
+      </a>
+      <a class="tile" href="parchment.html" style="--c:#8a3f5f">
+        <span class="tile-i"><i data-i="files"></i></span>
+        <span class="tile-t"><b>Parchment</b><small>PDF reader &amp; editor</small></span>
+        <i data-i="chevR" data-c="go"></i>
+      </a>
 
-<footer class="container">
-  <div class="row">
-    <p>Nyxdesk reads and writes files compatible with widely used office document formats, for interoperability only. It is an independent project, not affiliated with or endorsed by any software vendor, and uses no vendor names, logos, or branding.</p>
-    <div class="links">
-      <a href="notes.html">Notes</a>
-      <a href="pdf.html">PDF</a>
-      <a href="https://github.com/Anithing8/Nyxdesk" target="_blank" rel="noopener">GitHub</a>
-    </div>
+      <div class="openbox" id="openbox">
+        <button class="btn" id="openBtn"><i data-i="open"></i>Open a file…</button>
+        <p>or drop one anywhere on this page. It will open in the matching tool.</p>
+      </div>
+    </section>
+
+    <section class="recent" aria-labelledby="h-recent">
+      <div class="rh"><h2 id="h-recent">Saved on this device</h2></div>
+      <div id="recentList" class="rlist" aria-live="polite"></div>
+    </section>
   </div>
+</main>
+
+<footer class="foot">
+  <p>Files are kept in this browser&rsquo;s own storage and never leave your device. There are no accounts, no analytics and no third-party requests. Clearing site data or switching browsers removes saved files, so use <em>Save as</em> for anything you want to keep.</p>
+  <p class="links"><a href="NOTICE.md">Open-source notices</a><span>&middot;</span><button id="wipe" class="lnk">Delete all saved files</button></p>
 </footer>
 
-<script src="js/theme.js"></script>
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const list = $("#recentList");
+  const label = { inkwell: "Inkwell", abacus: "Abacus", marquee: "Marquee", parchment: "Parchment" };
+  const color = { inkwell: "#2b6f8e", abacus: "#5c7a2e", marquee: "#b4552d", parchment: "#8a3f5f" };
+
+  async function render(){
+    let items = [];
+    try{ items = await Nyx.store.list(); }catch(e){}
+    list.innerHTML = "";
+    if(!items.length){
+      list.append(Nyx.h("div", { class: "none" },
+        Nyx.h("p", null, "Nothing here yet."),
+        Nyx.h("p", { class: "sub" }, "Documents you write, sheets you build and decks you design are saved automatically and will show up in this list.")));
+      return;
+    }
+    items.forEach(m => {
+      const app = Nyx.APPS[m.app]; if(!app) return;
+      const row = Nyx.h("a", { class: "rrow", href: app.page + "#" + m.id },
+        Nyx.h("span", { class: "tag", style: { "--c": color[m.app] } }, label[m.app]),
+        Nyx.h("span", { class: "nm" }, m.title || "Untitled"),
+        Nyx.h("span", { class: "when" }, Nyx.ago(m.updated)),
+        Nyx.h("button", { class: "ib", type: "button", title: "Delete", "aria-label": "Delete " + m.title, onclick: async e => {
+          e.preventDefault(); e.stopPropagation();
+          if(await Nyx.confirm("Delete “" + m.title + "” from this browser? This can't be undone.", { ok: "Delete", danger: true })){ await Nyx.store.del(m.id); render(); }
+        } }, Nyx.icEl("trash")));
+      list.append(row);
+    });
+  }
+  render();
+
+  async function openFiles(files){
+    if(!files.length) return;
+    const f = files[0];
+    if(!Nyx.appForFile(f.name)){ Nyx.toast("Nyxdesk can't open “" + f.name.split(".").pop() + "” files."); return; }
+    await Nyx.openInApp(f, null);
+  }
+  $("#openBtn").addEventListener("click", async () => {
+    const all = Object.values(Nyx.APPS).flatMap(a => a.ext).join(",");
+    openFiles(await Nyx.pick(all));
+  });
+  addEventListener("dragover", e => e.preventDefault());
+  addEventListener("drop", e => { e.preventDefault(); openFiles([...e.dataTransfer.files]); });
+
+  $("#wipe").addEventListener("click", async () => {
+    if(await Nyx.confirm("This removes every document, sheet, deck and PDF saved in this browser. Files you've downloaded aren't affected.", { title: "Delete all saved files?", ok: "Delete everything", danger: true })){
+      await Nyx.store.clear(); render(); Nyx.toast("All saved files deleted.");
+    }
+  });
+
+  const tb = document.querySelector("[data-theme-toggle]");
+  const sync = () => { tb.innerHTML = Nyx.ic(Nyx.theme() === "dark" ? "sun" : "moon"); };
+  sync(); document.addEventListener("nyx-theme", sync);
+  if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("sw.js").catch(() => {});
+})();
+</script>
 </body>
 </html>

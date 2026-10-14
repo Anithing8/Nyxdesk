@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en" class="is-app">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Parchment — Nyxdesk</title>
+<meta name="theme-color" content="#8a3f5f">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/parchment.css">
+<script src="js/icons.js"></script>
+<script src="js/core.js"></script>
+</head>
+<body data-app="parchment">
+<div class="app">
+
+  <div class="bar">
+    <a class="home" href="./" title="Home"><span class="mark"><svg viewBox="0 0 24 24"><path d="M6 19V5l12 14V5"/></svg></span><span class="wm">Nyxdesk</span></a>
+    <span class="appname">Parchment</span>
+    <button class="btn filebtn" id="fileMenuBtn"><i data-i="chevD"></i>File</button>
+    <input class="title-in" id="docTitle" value="No PDF open" aria-label="File title" spellcheck="false" readonly>
+    <span class="savestate" id="savestate"></span>
+    <span class="sp"></span>
+    <button class="ib" data-theme-toggle title="Switch theme"><i data-i="moon"></i></button>
+    <button class="btn pri hide-phone" id="shareBtn"><i data-i="dl"></i>Export</button>
+  </div>
+
+  <div class="ribbon" id="ribbon">
+    <div class="rtabs" role="tablist">
+      <button class="rtab" data-p="view" role="tab">View</button>
+      <button class="rtab" data-p="annotate" role="tab">Annotate</button>
+      <button class="rtab" data-p="edit" role="tab">Edit</button>
+      <button class="rtab" data-p="pages" role="tab">Pages</button>
+      <button class="rtab" data-p="forms" role="tab">Forms</button>
+      <button class="rtab" data-p="protect" role="tab">Protect</button>
+    </div>
+
+    <div class="rpanel" data-p="view">
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" id="toolSelect" data-tool="select"><i data-i="pointer"></i>Select</button>
+        <button class="rb big" id="toolPan" data-tool="pan"><i data-i="hand"></i>Pan</button>
+      </div><div class="rg-label">Tool</div></div>
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="scrollModeBtn"><i data-i="scroll"></i>Continuous</button>
+        <button class="rb tx" id="fitBtn"><i data-i="maximize"></i>Fit width</button>
+      </div><div class="rg-label">Layout</div></div>
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="thumbToggleBtn"><i data-i="layoutgrid"></i>Thumbnails</button>
+        <button class="rb tx" id="searchBtn"><i data-i="search"></i>Find in document</button>
+      </div><div class="rg-label">Navigate</div></div>
+    </div>
+
+    <div class="rpanel" data-p="annotate">
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" data-tool="highlight"><i data-i="hilite"></i>Highlight</button>
+        <button class="rb big" data-tool="underlinetext"><i data-i="underline"></i>Underline</button>
+        <button class="rb big" data-tool="strikeline"><i data-i="strike"></i>Strikeout</button>
+        <button class="rb big" data-tool="draw"><i data-i="pen"></i>Draw</button>
+        <button class="rb big" data-tool="note"><i data-i="note"></i>Sticky note</button>
+        <button class="rb big" data-tool="text"><i data-i="textbox"></i>Text</button>
+        <button class="rb big" data-tool="shape"><i data-i="rectangle"></i>Shape</button>
+        <button class="rb big" data-tool="stamp"><i data-i="stamp"></i>Stamp</button>
+      </div><div class="rg-label">Markup</div></div>
+      <div class="rg"><div class="rg-body col">
+        <button class="rb swatch-btn tx" id="annColorBtn"><i data-i="palette"></i>Color<span class="bar-c" id="annColorC" style="--c:#ffe066"></span></button>
+        <input type="range" id="annWidth" min="1" max="14" value="3" title="Stroke width">
+      </div><div class="rg-label">Style</div></div>
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="eraseAnnBtn"><i data-i="eraser"></i>Erase</button>
+        <button class="rb tx" id="clearAnnBtn"><i data-i="trash"></i>Clear page</button>
+      </div><div class="rg-label">Remove</div></div>
+    </div>
+
+    <div class="rpanel" data-p="edit">
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" id="editTextBtn"><i data-i="type"></i>Add text</button>
+        <button class="rb big" id="editImgBtn"><i data-i="image"></i>Add image</button>
+        <button class="rb big" id="whiteoutBtn"><i data-i="eraser"></i>Whiteout</button>
+      </div><div class="rg-label">Add content</div></div>
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="redactBtn"><i data-i="redact"></i>Redact area</button>
+        <button class="rb tx" id="ocrBtn"><i data-i="scanline"></i>Make searchable</button>
+      </div><div class="rg-label">Redact &amp; OCR</div></div>
+    </div>
+
+    <div class="rpanel" data-p="pages">
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" id="rotateLBtn"><i data-i="rotateccw"></i>Rotate L</button>
+        <button class="rb big" id="rotateRBtn"><i data-i="rotate"></i>Rotate R</button>
+        <button class="rb big" id="delPageBtn"><i data-i="trash"></i>Delete page</button>
+        <button class="rb big" id="dupPageBtn"><i data-i="dup"></i>Duplicate</button>
+        <button class="rb big" id="insPageBtn"><i data-i="fileplus"></i>Insert blank</button>
+        <button class="rb big" id="extractBtn"><i data-i="filedown"></i>Extract page</button>
+      </div><div class="rg-label">This page</div></div>
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="mergeBtn"><i data-i="filecheck"></i>Merge PDFs…</button>
+        <button class="rb tx" id="splitBtn"><i data-i="split"></i>Split document…</button>
+      </div><div class="rg-label">Document</div></div>
+    </div>
+
+    <div class="rpanel" data-p="forms">
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" data-tool="field-text"><i data-i="form"></i>Text field</button>
+        <button class="rb big" data-tool="field-check"><i data-i="checkbox"></i>Checkbox</button>
+        <button class="rb big" data-tool="field-sig"><i data-i="signature"></i>Signature</button>
+      </div><div class="rg-label">Add form field</div></div>
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="flattenBtn"><i data-i="filecheck"></i>Flatten form</button>
+      </div><div class="rg-label">Finish</div></div>
+    </div>
+
+    <div class="rpanel" data-p="protect">
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="pwBtn"><i data-i="lock"></i>Set open password</button>
+        <button class="rb tx" id="watermarkPdfBtn"><i data-i="droplets"></i>Add watermark</button>
+      </div><div class="rg-label">Protect</div></div>
+    </div>
+  </div>
+
+  <div class="body">
+    <aside class="side" id="thumbSide" hidden>
+      <div class="side-h"><i data-i="layoutgrid"></i><span>Pages</span><span class="sp"></span><button class="ib" id="thumbClose"><i data-i="x"></i></button></div>
+      <div class="side-b" id="thumbList"></div>
+    </aside>
+
+    <div class="pdfwrap" id="pdfwrap">
+      <div class="dropzone" id="dropzone">
+        <i data-i="filesearch" data-c="lg"></i>
+        <p>Open a PDF to view, annotate, edit or sign it.</p>
+        <button class="btn pri" id="openBigBtn"><i data-i="open"></i>Open a PDF…</button>
+        <p class="hint">or drop a file here. Nothing leaves your device.</p>
+      </div>
+      <div class="pages" id="pdfPages" hidden></div>
+    </div>
+  </div>
+
+  <div class="status">
+    <button class="ib" id="prevPageBtn"><i data-i="chevU"></i></button>
+    <span id="pageInfo">– / –</span>
+    <button class="ib" id="nextPageBtn"><i data-i="chevD"></i></button>
+    <span class="sp"></span>
+    <div class="zoomctl">
+      <button class="ib" id="zoomOut">&minus;</button>
+      <input type="range" id="zoomRange" min="40" max="300" value="110" step="10">
+      <button class="ib" id="zoomIn">+</button>
+      <span id="zoomLabel">110%</span>
+    </div>
+  </div>
+</div>
+
+<script src="js/parchment.js"></script>
+</body>
+</html>

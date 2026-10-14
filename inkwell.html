@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en" class="is-app">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Inkwell — Nyxdesk</title>
+<meta name="theme-color" content="#2b6f8e">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/inkwell.css">
+<script src="js/icons.js"></script>
+<script src="js/core.js"></script>
+</head>
+<body data-app="inkwell">
+<div class="app">
+
+  <div class="bar">
+    <a class="home" href="./" title="Home"><span class="mark"><svg viewBox="0 0 24 24"><path d="M6 19V5l12 14V5"/></svg></span><span class="wm">Nyxdesk</span></a>
+    <span class="appname">Inkwell</span>
+    <div class="menu-wrap">
+      <button class="btn filebtn" id="fileMenuBtn"><i data-i="chevD"></i>File</button>
+    </div>
+    <input class="title-in" id="docTitle" value="Untitled document" aria-label="Document title" spellcheck="false">
+    <span class="savestate" id="savestate">Not saved yet</span>
+    <span class="sp"></span>
+    <button class="ib hide-phone" id="commentsBtn" title="Comments"><i data-i="comment"></i></button>
+    <button class="ib" data-theme-toggle title="Switch theme"><i data-i="moon"></i></button>
+    <button class="btn pri hide-phone" id="shareBtn"><i data-i="dl"></i>Export</button>
+  </div>
+
+  <div class="ribbon" id="ribbon">
+    <div class="rtabs" role="tablist">
+      <button class="rtab" data-p="home" role="tab">Home</button>
+      <button class="rtab" data-p="insert" role="tab">Insert</button>
+      <button class="rtab" data-p="layout" role="tab">Layout</button>
+      <button class="rtab" data-p="refs" role="tab">References</button>
+      <button class="rtab" data-p="review" role="tab">Review</button>
+      <button class="rtab" data-p="view" role="tab">View</button>
+      <button class="rtab ctx" data-p="table" id="tableTab" hidden role="tab">Table</button>
+    </div>
+
+    <!-- HOME -->
+    <div class="rpanel" data-p="home">
+      <div class="rg">
+        <div class="rg-body col">
+          <button class="rb tx" data-cmd="undo" title="Undo (Ctrl+Z)"><i data-i="undo"></i></button>
+          <button class="rb tx" data-cmd="redo" title="Redo (Ctrl+Y)"><i data-i="redo"></i></button>
+        </div>
+        <div class="rg-body" style="margin-top:2px">
+          <button class="rb" data-cmd="paintfmt" id="paintBtn" title="Format Painter — click once to copy formatting, double-click to keep it on"><i data-i="brush"></i></button>
+          <button class="rb" data-cmd="clearfmt" title="Clear formatting"><i data-i="clearfmt"></i></button>
+        </div>
+        <div class="rg-label">Clipboard</div>
+      </div>
+
+      <div class="rg">
+        <div class="rg-body nw">
+          <select class="rs" id="fontFamily" data-cmd="fontname" title="Font" style="width:128px">
+            <option>Inter</option><option>Georgia</option><option>Times New Roman</option><option>Arial</option>
+            <option>Verdana</option><option>Tahoma</option><option>Courier New</option><option>Garamond</option>
+            <option>Trebuchet MS</option><option>Palatino</option><option>Source Serif 4</option>
+          </select>
+          <select class="rs" id="fontSize" data-cmd="fontsize" title="Font size" style="width:56px">
+            <option>8</option><option>9</option><option>10</option><option>10.5</option><option>11</option>
+            <option selected>12</option><option>14</option><option>16</option><option>18</option><option>20</option>
+            <option>24</option><option>28</option><option>32</option><option>36</option><option>48</option><option>72</option>
+          </select>
+          <button class="rb" data-cmd="growfont" title="Grow font"><i data-i="plus"></i></button>
+          <button class="rb" data-cmd="shrinkfont" title="Shrink font"><i data-i="minus"></i></button>
+        </div>
+        <div class="rg-body nw" style="margin-top:2px">
+          <button class="rb" data-cmd="bold" title="Bold (Ctrl+B)"><i data-i="bold"></i></button>
+          <button class="rb" data-cmd="italic" title="Italic (Ctrl+I)"><i data-i="italic"></i></button>
+          <div class="menu-wrap"><button class="rb" data-cmd="underline" id="ulBtn" title="Underline (Ctrl+U)"><i data-i="underline"></i></button><button class="rb" id="ulMore" style="width:14px;padding:0"><i data-i="chevD" data-c="car"></i></button></div>
+          <button class="rb" data-cmd="strike" title="Strikethrough"><i data-i="strike"></i></button>
+          <button class="rb" data-cmd="sub" title="Subscript"><i data-i="sub"></i></button>
+          <button class="rb" data-cmd="sup" title="Superscript"><i data-i="sup"></i></button>
+          <button class="rb swatch-btn" id="hiliteBtn" title="Highlight color"><i data-i="hilite"></i><span class="bar-c" id="hiliteC" style="--c:#fde16b"></span></button>
+          <button class="rb swatch-btn" id="colorBtn" title="Font color"><i data-i="fontcolor"></i><span class="bar-c" id="colorC" style="--c:#24221e"></span></button>
+          <button class="rb" id="caseBtn" title="Change case"><i data-i="casesens"></i></button>
+        </div>
+        <div class="rg-label">Font</div>
+      </div>
+
+      <div class="rg">
+        <div class="rg-body nw">
+          <button class="rb" data-cmd="ol" title="Numbered list"><i data-i="olist"></i></button>
+          <button class="rb" data-cmd="ul" title="Bullet list"><i data-i="ulist"></i></button>
+          <button class="rb" data-cmd="checklist" title="Checklist"><i data-i="checkbox"></i></button>
+          <button class="rb" data-cmd="outdent" title="Decrease indent"><i data-i="outdent"></i></button>
+          <button class="rb" data-cmd="indent" title="Increase indent"><i data-i="indent"></i></button>
+          <div class="menu-wrap"><button class="rb" id="lineSpBtn" title="Line &amp; paragraph spacing"><i data-i="lineheight"></i></button></div>
+        </div>
+        <div class="rg-body nw" style="margin-top:2px">
+          <button class="rb" data-cmd="align" data-arg="left" title="Align left"><i data-i="alignL"></i></button>
+          <button class="rb" data-cmd="align" data-arg="center" title="Center"><i data-i="alignC"></i></button>
+          <button class="rb" data-cmd="align" data-arg="right" title="Align right"><i data-i="alignR"></i></button>
+          <button class="rb" data-cmd="align" data-arg="justify" title="Justify"><i data-i="alignJ"></i></button>
+          <button class="rb" data-cmd="quote" title="Blockquote"><i data-i="quote"></i></button>
+          <button class="rb" data-cmd="codeblock" title="Code block"><i data-i="code"></i></button>
+        </div>
+        <div class="rg-label">Paragraph</div>
+      </div>
+
+      <div class="rg">
+        <div class="rg-body col" style="min-width:150px">
+          <select class="rs" id="styleSel" data-cmd="style" title="Styles">
+            <option value="p">Normal</option>
+            <option value="h1">Heading 1</option>
+            <option value="h2">Heading 2</option>
+            <option value="h3">Heading 3</option>
+            <option value="h4">Heading 4</option>
+            <option value="title">Title</option>
+            <option value="subtitle">Subtitle</option>
+            <option value="quote">Intense quote</option>
+          </select>
+        </div>
+        <div class="rg-label">Styles</div>
+      </div>
+
+      <div class="rg">
+        <div class="rg-body col">
+          <button class="rb tx" id="findBtn" title="Find (Ctrl+F)"><i data-i="search"></i>Find</button>
+          <button class="rb tx" id="replaceBtn" title="Replace (Ctrl+H)"><i data-i="replace"></i>Replace</button>
+        </div>
+        <div class="rg-label">Editing</div>
+      </div>
+    </div>
+
+    <!-- INSERT -->
+    <div class="rpanel" data-p="insert">
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" id="insTableBtn"><i data-i="table"></i>Table</button>
+        <button class="rb big" id="insImgBtn"><i data-i="image"></i>Image</button>
+        <button class="rb big" id="insLinkBtn"><i data-i="link"></i>Link</button>
+        <button class="rb big" id="insShapeBtn"><i data-i="shapes"></i>Shape</button>
+      </div><div class="rg-label">Illustrations &amp; links</div></div>
+
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" id="insHeaderBtn"><i data-i="header"></i>Header</button>
+        <button class="rb big" id="insFooterBtn"><i data-i="footer"></i>Footer</button>
+        <button class="rb big" id="insPageNumBtn"><i data-i="hash"></i>Page #</button>
+        <button class="rb big" id="insBreakBtn"><i data-i="split"></i>Page break</button>
+      </div><div class="rg-label">Header, footer &amp; pages</div></div>
+
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" id="insTextboxBtn"><i data-i="textbox"></i>Text box</button>
+        <button class="rb big" id="insHrBtn"><i data-i="minus"></i>Divider</button>
+        <button class="rb big" id="insDateBtn"><i data-i="calendar"></i>Date &amp; time</button>
+        <button class="rb big" id="insSymbolBtn"><i data-i="omega"></i>Symbol</button>
+      </div><div class="rg-label">Text</div></div>
+
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" id="insCommentBtn"><i data-i="commentplus"></i>Comment</button>
+        <button class="rb big" id="insEqBtn"><i data-i="sigma"></i>Equation</button>
+      </div><div class="rg-label">Comments &amp; math</div></div>
+    </div>
+
+    <!-- LAYOUT -->
+    <div class="rpanel" data-p="layout">
+      <div class="rg"><div class="rg-body col">
+        <div class="menu-wrap"><button class="rb tx" id="marginsBtn"><i data-i="ruler"></i>Margins</button></div>
+        <div class="menu-wrap"><button class="rb tx" id="orientBtn"><i data-i="filetext"></i>Orientation</button></div>
+      </div><div class="rg-label">Page setup</div></div>
+      <div class="rg"><div class="rg-body col">
+        <div class="menu-wrap"><button class="rb tx" id="sizeBtn"><i data-i="crop"></i>Size</button></div>
+        <div class="menu-wrap"><button class="rb tx" id="colsBtn"><i data-i="columns"></i>Columns</button></div>
+      </div><div class="rg-label">&nbsp;</div></div>
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="watermarkBtn"><i data-i="droplets"></i>Watermark</button>
+        <div class="menu-wrap"><button class="rb tx" id="pageColorBtn"><i data-i="palette"></i>Page color</button></div>
+      </div><div class="rg-label">Page background</div></div>
+    </div>
+
+    <!-- REFERENCES -->
+    <div class="rpanel" data-p="refs">
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="tocBtn"><i data-i="toc"></i>Table of contents</button>
+        <button class="rb tx" id="tocUpdateBtn"><i data-i="refresh"></i>Update TOC</button>
+      </div><div class="rg-label">Table of contents</div></div>
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="footnoteBtn"><i data-i="pilcrow"></i>Insert footnote</button>
+        <button class="rb tx" id="citeBtn"><i data-i="bookmark"></i>Insert citation</button>
+      </div><div class="rg-label">Footnotes &amp; citations</div></div>
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="captionBtn"><i data-i="filetext"></i>Insert caption</button>
+      </div><div class="rg-label">Captions</div></div>
+    </div>
+
+    <!-- REVIEW -->
+    <div class="rpanel" data-p="review">
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="spellBtn"><i data-i="spell"></i>Spelling</button>
+        <button class="rb tx" id="wcBtn"><i data-i="hash"></i>Word count</button>
+      </div><div class="rg-label">Proofing</div></div>
+      <div class="rg"><div class="rg-body col">
+        <label class="chk rb tx" style="justify-content:flex-start"><input type="checkbox" id="trackChk"> Track changes</label>
+        <div style="display:flex;gap:2px">
+          <button class="rb" id="acceptBtn" title="Accept"><i data-i="check"></i></button>
+          <button class="rb" id="rejectBtn" title="Reject"><i data-i="x"></i></button>
+        </div>
+      </div><div class="rg-label">Tracking</div></div>
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="newCommentBtn"><i data-i="commentplus"></i>New comment</button>
+      </div><div class="rg-label">Comments</div></div>
+    </div>
+
+    <!-- VIEW -->
+    <div class="rpanel" data-p="view">
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" data-cmd="setview" data-arg="print"><i data-i="filetext"></i>Print layout</button>
+        <button class="rb big" data-cmd="setview" data-arg="read"><i data-i="bookopen"></i>Read mode</button>
+        <button class="rb big" data-cmd="setview" data-arg="outline"><i data-i="listtree"></i>Outline</button>
+      </div><div class="rg-label">Views</div></div>
+      <div class="rg"><div class="rg-body col">
+        <label class="chk rb tx"><input type="checkbox" id="rulerChk" checked> Ruler</label>
+        <label class="chk rb tx"><input type="checkbox" id="marksChk"> Formatting marks</label>
+      </div><div class="rg-label">Show</div></div>
+    </div>
+
+    <!-- TABLE (contextual) -->
+    <div class="rpanel" data-p="table">
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" data-cmd="tbl-rowabove"><i data-i="rowins"></i>Row above</button>
+        <button class="rb big" data-cmd="tbl-rowbelow"><i data-i="rowins"></i>Row below</button>
+        <button class="rb big" data-cmd="tbl-colleft"><i data-i="colins"></i>Col left</button>
+        <button class="rb big" data-cmd="tbl-colright"><i data-i="colins"></i>Col right</button>
+      </div><div class="rg-label">Insert</div></div>
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" data-cmd="tbl-delrow"><i data-i="minus"></i>Delete row</button>
+        <button class="rb big" data-cmd="tbl-delcol"><i data-i="minus"></i>Delete column</button>
+        <button class="rb big" data-cmd="tbl-del"><i data-i="trash"></i>Delete table</button>
+      </div><div class="rg-label">Delete</div></div>
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" data-cmd="tbl-merge"><i data-i="merge"></i>Merge cells</button>
+        <button class="rb big" id="tblShadeBtn"><i data-i="fill"></i>Shading</button>
+        <button class="rb big" id="tblBorderBtn"><i data-i="borders"></i>Borders</button>
+      </div><div class="rg-label">Merge &amp; style</div></div>
+    </div>
+  </div>
+
+  <div class="body">
+    <aside class="side" id="navSide" hidden>
+      <div class="side-h"><i data-i="listtree"></i><span>Headings</span><span class="sp"></span><button class="ib" id="navClose"><i data-i="x"></i></button></div>
+      <div class="side-b" id="navList"></div>
+    </aside>
+
+    <div class="workspace" id="workspace">
+      <div class="rulerwrap" id="rulerWrap">
+        <div class="hruler" id="hRuler"></div>
+      </div>
+      <div class="pages" id="pages">
+        <article class="page" id="page1">
+          <div class="pg-header" id="pgHeader" contenteditable="true" spellcheck="false" hidden></div>
+          <div class="editor" id="editor" contenteditable="true" spellcheck="true" aria-label="Document body"></div>
+          <div class="pg-footer" id="pgFooter" contenteditable="true" spellcheck="false" hidden></div>
+        </article>
+      </div>
+    </div>
+
+    <aside class="side right" id="cmSide" hidden>
+      <div class="side-h"><i data-i="comment"></i><span>Comments</span><span class="sp"></span><button class="ib" id="cmClose"><i data-i="x"></i></button></div>
+      <div class="side-b" id="cmList"></div>
+    </aside>
+  </div>
+
+  <div class="status">
+    <span id="wordCount">0 words</span>
+    <span id="pageCount">Page 1 of 1</span>
+    <span class="sp"></span>
+    <span id="langTag">English (US)</span>
+    <div class="zoomctl">
+      <button class="ib" id="zoomOut">&minus;</button>
+      <input type="range" id="zoomRange" min="50" max="200" value="100" step="5">
+      <button class="ib" id="zoomIn">+</button>
+      <span id="zoomLabel">100%</span>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="openInput" accept=".docx,.html,.htm,.md,.markdown,.txt" hidden>
+<input type="file" id="imgInput" accept="image/*" hidden>
+
+<script src="js/inkwell.js"></script>
+</body>
+</html>

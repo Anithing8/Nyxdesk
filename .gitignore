@@ -1,5 +1,16 @@
+# OS cruft
 .DS_Store
 Thumbs.db
-node_modules/
-*.log
+
+# Editors
 .vscode/
+.idea/
+*.swp
+
+# Local tooling (icon generation script + its node deps, not needed to run the site)
+node_modules/
+tools/node_modules/
+
+# Logs / temp
+*.log
+.tmp/

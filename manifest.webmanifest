@@ -1,0 +1,13 @@
+{
+  "name": "Nyxdesk",
+  "short_name": "Nyxdesk",
+  "description": "Write documents, build spreadsheets, design presentations and edit PDFs in your browser. Files stay on your device.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#efede8",
+  "theme_color": "#efede8",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

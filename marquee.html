@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en" class="is-app">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Marquee — Nyxdesk</title>
+<meta name="theme-color" content="#b4552d">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/marquee.css">
+<script src="js/icons.js"></script>
+<script src="js/core.js"></script>
+</head>
+<body data-app="marquee">
+<div class="app">
+
+  <div class="bar">
+    <a class="home" href="./" title="Home"><span class="mark"><svg viewBox="0 0 24 24"><path d="M6 19V5l12 14V5"/></svg></span><span class="wm">Nyxdesk</span></a>
+    <span class="appname">Marquee</span>
+    <button class="btn filebtn" id="fileMenuBtn"><i data-i="chevD"></i>File</button>
+    <input class="title-in" id="docTitle" value="Untitled presentation" aria-label="Presentation title" spellcheck="false">
+    <span class="savestate" id="savestate">Not saved yet</span>
+    <span class="sp"></span>
+    <button class="btn hide-phone" id="presentBtn"><i data-i="play"></i>Present</button>
+    <button class="ib" data-theme-toggle title="Switch theme"><i data-i="moon"></i></button>
+    <button class="btn pri hide-phone" id="shareBtn"><i data-i="dl"></i>Export</button>
+  </div>
+
+  <div class="ribbon" id="ribbon">
+    <div class="rtabs" role="tablist">
+      <button class="rtab" data-p="home" role="tab">Home</button>
+      <button class="rtab" data-p="insert" role="tab">Insert</button>
+      <button class="rtab" data-p="design" role="tab">Design</button>
+      <button class="rtab" data-p="transitions" role="tab">Transitions</button>
+      <button class="rtab" data-p="view" role="tab">View</button>
+    </div>
+
+    <div class="rpanel" data-p="home">
+      <div class="rg"><div class="rg-body col">
+        <button class="rb tx" id="newSlideBtn"><i data-i="pageplus"></i>New slide</button>
+        <button class="rb tx" id="dupSlideBtn"><i data-i="dup"></i>Duplicate</button>
+      </div><div class="rg-label">Slides</div></div>
+      <div class="rg"><div class="rg-body col" style="min-width:150px">
+        <select class="rs" id="layoutSel">
+          <option value="title">Title slide</option>
+          <option value="titlebody">Title &amp; content</option>
+          <option value="twocol">Two content</option>
+          <option value="blank">Blank</option>
+          <option value="quote">Quote</option>
+          <option value="section">Section header</option>
+        </select>
+      </div><div class="rg-label">Layout</div></div>
+      <div class="rg"><div class="rg-body nw">
+        <select class="rs" id="fontFamily" style="width:110px"><option>Inter</option><option>Georgia</option><option>Arial</option><option>Verdana</option><option>Courier New</option></select>
+        <select class="rs" id="fontSize" style="width:48px"><option>12</option><option>14</option><option>18</option><option>24</option><option selected>28</option><option>32</option><option>40</option><option>54</option><option>72</option></select>
+      </div>
+      <div class="rg-body nw" style="margin-top:2px">
+        <button class="rb" id="boldBtn" title="Bold"><i data-i="bold"></i></button>
+        <button class="rb" id="italicBtn" title="Italic"><i data-i="italic"></i></button>
+        <button class="rb" id="underlineBtn" title="Underline"><i data-i="underline"></i></button>
+        <button class="rb swatch-btn" id="txColorBtn" title="Text color"><i data-i="fontcolor"></i><span class="bar-c" id="txColorC" style="--c:#1c1b19"></span></button>
+        <button class="rb" id="alignLBtn" title="Align left"><i data-i="alignL"></i></button>
+        <button class="rb" id="alignCBtn" title="Align center"><i data-i="alignC"></i></button>
+        <button class="rb" id="alignRBtn" title="Align right"><i data-i="alignR"></i></button>
+      </div><div class="rg-label">Font</div></div>
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" id="frontBtn"><i data-i="front"></i>Bring front</button>
+        <button class="rb big" id="backBtn"><i data-i="back"></i>Send back</button>
+        <button class="rb big" id="delObjBtn"><i data-i="trash"></i>Delete</button>
+      </div><div class="rg-label">Arrange</div></div>
+    </div>
+
+    <div class="rpanel" data-p="insert">
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" id="insTextBtn"><i data-i="textbox"></i>Text box</button>
+        <button class="rb big" id="insImgBtn"><i data-i="image"></i>Image</button>
+        <button class="rb big" id="insShapeBtn"><i data-i="shapes"></i>Shape</button>
+        <button class="rb big" id="insLineBtn"><i data-i="minus"></i>Line</button>
+        <button class="rb big" id="insChartBtn"><i data-i="chartcol"></i>Chart</button>
+        <button class="rb big" id="insTableBtn"><i data-i="table"></i>Table</button>
+        <button class="rb big" id="insIconBtn"><i data-i="star"></i>Icon</button>
+        <button class="rb big" id="insLinkBtn"><i data-i="link"></i>Link</button>
+      </div><div class="rg-label">Insert</div></div>
+    </div>
+
+    <div class="rpanel" data-p="design">
+      <div class="rg"><div class="rg-body" id="themeRow"></div><div class="rg-label">Themes</div></div>
+      <div class="rg"><div class="rg-body col">
+        <div class="menu-wrap"><button class="rb tx" id="bgColorBtn"><i data-i="palette"></i>Slide background</button></div>
+      </div><div class="rg-label">Background</div></div>
+    </div>
+
+    <div class="rpanel" data-p="transitions">
+      <div class="rg"><div class="rg-body col" style="min-width:150px">
+        <select class="rs" id="transSel">
+          <option value="none">None</option>
+          <option value="fade">Fade</option>
+          <option value="slide">Slide</option>
+          <option value="zoom">Zoom</option>
+        </select>
+      </div><div class="rg-label">This slide</div></div>
+    </div>
+
+    <div class="rpanel" data-p="view">
+      <div class="rg"><div class="rg-body">
+        <button class="rb big" id="viewGridBtn"><i data-i="grid"></i>Slide sorter</button>
+        <button class="rb big" id="viewNotesBtn"><i data-i="note"></i>Speaker notes</button>
+      </div><div class="rg-label">Views</div></div>
+    </div>
+  </div>
+
+  <div class="body">
+    <aside class="side" id="thumbSide">
+      <div class="side-b" id="thumbs"></div>
+    </aside>
+
+    <div class="canvasWrap" id="canvasWrap">
+      <div class="slideFrame" id="slideFrame">
+        <div class="slide" id="slide" style="--w:960px;--h:540px"></div>
+      </div>
+      <div class="notesPanel" id="notesPanel" hidden>
+        <textarea class="inp" id="notesArea" placeholder="Speaker notes for this slide…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="status">
+    <span id="slideInfo">Slide 1 of 1</span>
+    <span class="sp"></span>
+    <div class="zoomctl">
+      <button class="ib" id="zoomOut">&minus;</button>
+      <input type="range" id="zoomRange" min="40" max="150" value="100" step="5">
+      <button class="ib" id="zoomIn">+</button>
+      <span id="zoomLabel">100%</span>
+    </div>
+  </div>
+</div>
+
+<div class="present-ui" id="presentUi" hidden>
+  <div class="present-slide" id="presentSlide"></div>
+  <div class="present-ctl">
+    <button class="ib" id="prevBtn"><i data-i="chevL"></i></button>
+    <span id="presentCounter">1 / 1</span>
+    <button class="ib" id="nextBtn"><i data-i="chevR"></i></button>
+    <button class="ib" id="exitPresentBtn"><i data-i="x"></i></button>
+  </div>
+</div>
+
+<script src="js/marquee.js"></script>
+</body>
+</html>
