@@ -1,0 +1,213 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Accept Android SDK Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+
+      - name: Wrap static site into Capacitor Android project
+        run: |
+          mkdir -p www
+          rsync -a --exclude='www' --exclude='.git' --exclude='.github' --exclude='node_modules' --exclude='android' --exclude='assets' . www/
+          if [ -f www/index.html ]; then sed -i 's|/Nyxdesk/|./|g' www/index.html; fi
+          rm -f www/package.json www/package-lock.json
+          echo '{"name":"nyxdesk-app","version":"1.0.0","private":true}' > package.json
+          cat << 'EOF' > capacitor.config.json
+          {
+            "appId": "com.anithing8.nyxdesk",
+            "appName": "Nyxdesk",
+            "webDir": "www",
+            "android": {
+              "adjustMarginsForEdgeToEdge": "disable"
+            }
+          }
+          EOF
+          npm install @capacitor/core@7 @capacitor/cli@7 @capacitor/android@7 @capacitor/assets sharp
+          npx cap add android
+
+      - name: Generate App Logo and Splash Screen from Website
+        run: |
+          mkdir -p assets
+          cat << 'EOF' > generate-icon.js
+          const fs = require('fs');
+          const sharp = require('sharp');
+
+          async function run() {
+            let inputBuffer = null;
+            const candidates = ['icon.png', 'logo.png', 'favicon.png', 'icon.svg', 'logo.svg', 'favicon.svg'];
+            for (const file of candidates) {
+              if (fs.existsSync(file)) {
+                inputBuffer = fs.readFileSync(file);
+                break;
+              }
+            }
+
+            if (!inputBuffer && fs.existsSync('www/index.html')) {
+              const html = fs.readFileSync('www/index.html', 'utf8');
+              const imgMatch = html.match(/rel=["'](?:shortcut |apple-touch-)?icon["'][^>]*href=["']([^"']+\.(?:png|svg|ico))["']/i);
+              if (imgMatch && imgMatch[1] && !imgMatch[1].startsWith('http') && !imgMatch[1].startsWith('data:')) {
+                const cleanPath = 'www/' + imgMatch[1].replace(/^\.?\/?/, '');
+                if (fs.existsSync(cleanPath)) {
+                  inputBuffer = fs.readFileSync(cleanPath);
+                }
+              }
+              if (!inputBuffer) {
+                const dataUriMatch = html.match(/rel=["'](?:shortcut )?icon["'][^>]*href=["']data:image\/svg\+xml[^,"']*,(.*?)["']/i);
+                if (dataUriMatch && dataUriMatch[1]) {
+                  inputBuffer = Buffer.from(decodeURIComponent(dataUriMatch[1]));
+                } else {
+                  const svgMatch = html.match(/<svg[\s\S]*?<\/svg>/i);
+                  if (svgMatch && !svgMatch[0].includes('currentColor')) {
+                    inputBuffer = Buffer.from(svgMatch[0]);
+                  }
+                }
+              }
+            }
+
+            const fallbackSvg = Buffer.from(`
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1024" height="1024">
+                <rect width="512" height="512" rx="115" fill="#0f0f17"/>
+                <rect x="36" y="36" width="440" height="440" rx="90" fill="none" stroke="#6366f1" stroke-width="16" stroke-opacity="0.4"/>
+                <path d="M156 366V146h48l104 142V146h48v220h-48L204 224v142h-48z" fill="#ffffff"/>
+              </svg>
+            `);
+
+            try {
+              await sharp(inputBuffer || fallbackSvg).resize(1024, 1024, { fit: 'contain', background: '#0f0f17' }).png().toFile('assets/icon-only.png');
+            } catch (e) {
+              await sharp(fallbackSvg).resize(1024, 1024).png().toFile('assets/icon-only.png');
+            }
+
+            await sharp({
+              create: { width: 2732, height: 2732, channels: 4, background: '#0f0f17' }
+            }).png().toFile('assets/splash.png');
+          }
+          run();
+          EOF
+          node generate-icon.js
+          npx @capacitor/assets generate --android --iconBackgroundColor '#0f0f17' --iconBackgroundColorDark '#0f0f17' --splashBackgroundColor '#0f0f17' --splashBackgroundColorDark '#0f0f17'
+
+      - name: Force Hardware Status Bar and Gesture Bar Margins
+        run: |
+          npx cap sync android
+          cat << 'EOF' > android/app/src/main/java/com/anithing8/nyxdesk/MainActivity.java
+          package com.anithing8.nyxdesk;
+
+          import android.graphics.Color;
+          import android.os.Bundle;
+          import android.view.View;
+          import android.view.ViewGroup;
+          import android.webkit.WebSettings;
+          import android.webkit.WebView;
+          import androidx.core.view.ViewCompat;
+          import androidx.core.view.WindowCompat;
+          import androidx.core.view.WindowInsetsControllerCompat;
+          import com.getcapacitor.BridgeActivity;
+
+          public class MainActivity extends BridgeActivity {
+              @Override
+              public void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+
+                  getWindow().setStatusBarColor(Color.parseColor("#0f0f17"));
+                  getWindow().setNavigationBarColor(Color.parseColor("#0f0f17"));
+
+                  WindowInsetsControllerCompat controller =
+                      WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+                  if (controller != null) {
+                      controller.setAppearanceLightStatusBars(false);
+                      controller.setAppearanceLightNavigationBars(false);
+                  }
+
+                  float density = getResources().getDisplayMetrics().density;
+
+                  int statusBarHeight = 0;
+                  int statusResId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+                  if (statusResId > 0) {
+                      statusBarHeight = getResources().getDimensionPixelSize(statusResId);
+                  }
+                  int minTopPx = (int) (40 * density);
+                  if (statusBarHeight < minTopPx) {
+                      statusBarHeight = minTopPx;
+                  }
+
+                  int navBarHeight = (int) (24 * density);
+
+                  final int finalTop = statusBarHeight;
+                  final int finalBottom = navBarHeight;
+
+                  View content = findViewById(android.R.id.content);
+                  if (content != null) {
+                      content.setBackgroundColor(Color.parseColor("#0f0f17"));
+                  }
+
+                  if (getBridge() != null && getBridge().getWebView() != null) {
+                      WebView webView = getBridge().getWebView();
+                      WebSettings settings = webView.getSettings();
+                      settings.setTextZoom(100);
+                      settings.setDomStorageEnabled(true);
+
+                      View parent = (View) webView.getParent();
+                      if (parent != null) {
+                          parent.setBackgroundColor(Color.parseColor("#0f0f17"));
+                      }
+
+                      ViewCompat.setOnApplyWindowInsetsListener(webView, null);
+
+                      ViewGroup.LayoutParams lp = webView.getLayoutParams();
+                      if (lp instanceof ViewGroup.MarginLayoutParams) {
+                          ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) lp;
+                          mlp.topMargin = finalTop;
+                          mlp.bottomMargin = finalBottom;
+                          webView.setLayoutParams(mlp);
+                      }
+
+                      webView.post(() -> {
+                          ViewCompat.setOnApplyWindowInsetsListener(webView, null);
+                          ViewGroup.LayoutParams postLp = webView.getLayoutParams();
+                          if (postLp instanceof ViewGroup.MarginLayoutParams) {
+                              ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) postLp;
+                              mlp.topMargin = finalTop;
+                              mlp.bottomMargin = finalBottom;
+                              webView.setLayoutParams(mlp);
+                              webView.requestLayout();
+                          }
+                      });
+                  }
+              }
+          }
+          EOF
+
+      - name: Build Debug APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nyxdesk-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
