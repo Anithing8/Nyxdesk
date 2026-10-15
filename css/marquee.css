@@ -9,7 +9,7 @@
 .thumbdel svg{width:11px;height:11px}
 .canvasWrap{flex:1;display:flex;flex-direction:column;overflow:auto;background:var(--bg);align-items:center;padding:22px 16px}
 .slideFrame{flex:none}
-.slide{width:var(--w);height:var(--h);background:#fff;color:#1c1b19;position:relative;box-shadow:var(--shadow-lg);overflow:hidden;font-family:var(--font);transform:scale(var(--zoom,1));transform-origin:top center}
+.slide{width:var(--w);height:var(--h);background:#fff;color:#1c1b19;position:relative;box-shadow:var(--shadow-lg);overflow:hidden;font-family:var(--font);transform:scale(var(--zoom,1));transform-origin:top left}
 .sld-obj{position:absolute;cursor:move}
 .sld-obj.sel{outline:2px solid var(--focus)}
 .sld-obj .handle{position:absolute;width:9px;height:9px;background:var(--focus);border:1px solid #fff;z-index:5}

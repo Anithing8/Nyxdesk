@@ -5,7 +5,8 @@
 .hruler .mk{position:absolute;top:0;bottom:0;border-left:1px solid var(--line-soft);padding-left:2px;line-height:20px}
 .hruler .mg{position:absolute;top:0;bottom:0;background:var(--surface-3)}
 body:not(.show-ruler) .rulerwrap{display:none}
-.pages{width:816px;max-width:100%;margin-top:14px;display:flex;flex-direction:column;gap:22px}
+.pagesOuter{margin-top:14px}
+.pages{width:816px;display:flex;flex-direction:column;gap:22px;transform-origin:top left}
 .page{background:var(--paper);color:var(--paper-ink);box-shadow:var(--shadow-lg);border-radius:2px;min-height:1056px;display:flex;flex-direction:column;position:relative}
 .pg-header,.pg-footer{padding:0 76px;min-height:30px;color:#666;font-size:12.5px;outline:none}
 .pg-header{padding-top:28px}
@@ -23,10 +24,10 @@ body:not(.show-ruler) .rulerwrap{display:none}
 .editor ul.tasklist{list-style:none;padding-left:.2em}
 .editor ul.tasklist li{display:flex;gap:8px;align-items:flex-start}
 .editor ul.tasklist li input{margin-top:5px}
-.editor blockquote{margin:0 0 .85em;padding:2px 0 2px 16px;border-left:3px solid #b9ac86;color:#555;font-style:italic}
-.editor blockquote.intense{border-left-color:#2b6f8e;font-weight:600;color:#222}
+.editor blockquote{margin:0 0 .85em;padding:2px 0 2px 16px;border-left:3px solid #c3a79e;color:#555;font-style:italic}
+.editor blockquote.intense{border-left-color:var(--app);font-weight:600;color:#222}
 .editor pre{margin:0 0 .85em;padding:12px 14px;background:#f1efe8;border-radius:6px;font:13px/1.5 var(--mono);overflow:auto}
-.editor a{color:#2b6f8e;text-decoration:underline}
+.editor a{color:var(--app);text-decoration:underline}
 .editor table{border-collapse:collapse;margin:0 0 1em;width:100%}
 .editor table td,.editor table th{border:1px solid #c9c4b4;padding:6px 9px;vertical-align:top;min-width:40px}
 .editor table.nb td{border-color:transparent}
@@ -48,16 +49,16 @@ body:not(.show-ruler) .rulerwrap{display:none}
 .editor .toc-block .toc-h{font-weight:700;margin-bottom:8px}
 .editor .toc-block a{display:flex;justify-content:space-between;text-decoration:none;color:#333;padding:2px 0;font-size:14px}
 .editor .toc-block a::after{content:attr(data-pg)}
-.editor sup.fn-ref{color:#2b6f8e;cursor:pointer}
+.editor sup.fn-ref{color:var(--app);cursor:pointer}
 .editor .fn-list{margin-top:2em;padding-top:.6em;border-top:1px solid #ccc;font-size:13px;color:#444}
 @media print{
   .workspace{padding:0;overflow:visible;background:#fff}
-  .pages{width:auto;margin:0;gap:0}
+  .pagesOuter{width:auto!important;height:auto!important;margin:0}
+  .pages{width:auto;margin:0;gap:0;transform:none!important}
   .page{box-shadow:none;border-radius:0;min-height:0;page-break-after:always}
   .side,.rulerwrap{display:none!important}
 }
 @media (max-width:860px){
-  .pages,.hruler{width:100%}
   .editor{padding:34px 22px}
   .pg-header,.pg-footer{padding:0 22px}
 }
