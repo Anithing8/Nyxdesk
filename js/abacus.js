@@ -2,6 +2,7 @@
 (function(){
   "use strict";
   const N = window.Nyx, h = N.h, $ = s => document.querySelector(s);
+  const DEFAULT_FONT = "-apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
   const ROWS = 100, COLS = 26;
   const colLetter = c => { let s = ""; c++; while(c){ c--; s = String.fromCharCode(65 + c % 26) + s; c = Math.floor(c / 26); } return s; };
   const ref = (r, c) => colLetter(c) + (r + 1);
@@ -238,7 +239,7 @@
     $("#boldBtn").classList.toggle("on", !!cl.bold);
     $("#italicBtn").classList.toggle("on", !!cl.italic);
     $("#underlineBtn").classList.toggle("on", !!cl.underline);
-    $("#fontFamily").value = cl.fontFamily || "Inter";
+    $("#fontFamily").value = cl.fontFamily || DEFAULT_FONT;
     $("#fontSize").value = cl.fontSize || 11;
     $("#numFmt").value = cl.fmt || "general";
   }

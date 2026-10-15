@@ -14,20 +14,32 @@
 
   /* ---------- selection-preserving exec ---------- */
   function exec(cmd, val){ document.execCommand(cmd, false, val); editor.focus(); syncToolbar(); touch(); }
+  /* Wraps the current selection in `tag` with the given inline `style`. If nothing is
+     selected (just a blinking caret), it instead inserts an empty styled marker and
+     drops the caret inside it, so whatever gets typed next picks up the style — the
+     same behavior Word/Docs give you for "change the font, then keep typing". */
   function wrapSel(tag, style){
     const sel = window.getSelection(); if(!sel.rangeCount) return;
-    const r = sel.getRangeAt(0); if(r.collapsed) return;
+    const r = sel.getRangeAt(0);
     const el = document.createElement(tag); if(style) el.setAttribute("style", style);
+    if(r.collapsed){
+      el.appendChild(document.createTextNode("\u200b"));
+      r.insertNode(el);
+      const nr = document.createRange(); nr.setStart(el.firstChild, 1); nr.collapse(true);
+      sel.removeAllRanges(); sel.addRange(nr);
+      editor.focus(); touch();
+      return;
+    }
     try{ r.surroundContents(el); }catch(e){ el.appendChild(r.extractContents()); r.insertNode(el); }
     sel.removeAllRanges(); const nr = document.createRange(); nr.selectNodeContents(el); sel.addRange(nr);
-    touch();
+    editor.focus(); touch();
   }
 
   const CMDS = {
     bold: () => exec("bold"), italic: () => exec("italic"), underline: () => exec("underline"),
     strike: () => exec("strikeThrough"), sub: () => exec("subscript"), sup: () => exec("superscript"),
     growfont: () => stepFont(1), shrinkfont: () => stepFont(-1),
-    fontname: v => exec("fontName", v), fontsize: v => applySize(v),
+    fontname: v => applyFontFamily(v), fontsize: v => applySize(v),
     ol: () => exec("insertOrderedList"), ul: () => exec("insertUnorderedList"),
     checklist: () => insertChecklist(),
     outdent: () => exec("outdent"), indent: () => exec("indent"),
@@ -48,6 +60,11 @@
     wrapSel("span", "font-size:" + next + "px");
   }
   function applySize(pt){ wrapSel("span", "font-size:" + Math.round(pt * 1.333) + "px"); }
+  /* Font family is applied by hand rather than via document.execCommand("fontName", ...):
+     that command silently no-ops in current browsers when given a comma-separated
+     fallback stack (it only tolerates a single bare name), which made the font picker
+     look broken for anything but single-word fonts. */
+  function applyFontFamily(stack){ wrapSel("span", "font-family:" + stack); }
 
   function toggleBlock(tag){
     const blk = currentBlock();

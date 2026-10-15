@@ -4,12 +4,13 @@
   const N = window.Nyx, h = N.h, $ = s => document.querySelector(s);
   const W = 960, H = 540;
 
+  const SANS = "-apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
   const THEMES = [
-    { name: "Ink", bg: "#ffffff", ink: "#1c1b19", accent: "#b06a73", font: "Inter" },
-    { name: "Clay", bg: "#fbf4ea", ink: "#3a2f22", accent: "#b4552d", font: "Georgia" },
-    { name: "Slate", bg: "#20242b", ink: "#eef1f6", accent: "#7fb0e0", font: "Inter" },
-    { name: "Sage", bg: "#f3f6ee", ink: "#273321", accent: "#5c7a2e", font: "Verdana" },
-    { name: "Plum", bg: "#241a26", ink: "#f3e9f4", accent: "#c279b0", font: "Georgia" }
+    { name: "Ink", bg: "#ffffff", ink: "#1c1b19", accent: "#b06a73", font: SANS },
+    { name: "Clay", bg: "#fbf4ea", ink: "#3a2f22", accent: "#b4552d", font: "Georgia, 'Times New Roman', serif" },
+    { name: "Slate", bg: "#20242b", ink: "#eef1f6", accent: "#7fb0e0", font: SANS },
+    { name: "Sage", bg: "#f3f6ee", ink: "#273321", accent: "#5c7a2e", font: "Verdana, Geneva, sans-serif" },
+    { name: "Plum", bg: "#241a26", ink: "#f3e9f4", accent: "#c279b0", font: "Georgia, 'Times New Roman', serif" }
   ];
   let theme = THEMES[0];
 
@@ -73,7 +74,12 @@
     if(o.type === "text"){
       const t = h("div", { class: "sld-text", contenteditable: "true", spellcheck: "false", style: { fontSize: o.size + "px", fontWeight: o.bold ? "700" : "400", fontStyle: o.italic ? "italic" : "normal", textDecoration: o.underline ? "underline" : "none", textAlign: o.align || "left", color: o.color || "inherit", fontFamily: o.font || "inherit" } }, o.text);
       t.addEventListener("input", () => { o.text = t.innerHTML; S.touch(); });
-      t.addEventListener("mousedown", e => e.stopPropagation());
+      /* Stop the click from also triggering the wrapper's drag/select handler (which
+         would fight the browser's native text-cursor placement) — but still record this
+         object as selected, silently, so the Font/Bold/Italic ribbon controls work the
+         moment you click in to edit text, not only when you click the box's edge. */
+      t.addEventListener("mousedown", e => { e.stopPropagation(); selId = o.id; });
+      t.addEventListener("focus", () => { selId = o.id; });
       t.addEventListener("dblclick", e => e.stopPropagation());
       box.append(t);
     }else if(o.type === "image"){
