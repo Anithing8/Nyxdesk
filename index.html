@@ -23,29 +23,29 @@
 
 <main class="wrap">
   <div class="lead">
-    <h1>Your files, on your desk.</h1>
+    <h1>Your files, <em>on your desk.</em></h1>
     <p>Four small tools for documents, spreadsheets, presentations and PDFs. Everything opens and saves on this device &mdash; nothing is uploaded.</p>
   </div>
 
   <div class="cols">
     <section class="new" aria-labelledby="h-new">
       <h2 id="h-new">Start something</h2>
-      <a class="tile" href="inkwell.html" style="--c:#2b6f8e">
+      <a class="tile" href="inkwell.html" style="--c:#b06a73">
         <span class="tile-i"><i data-i="filetext"></i></span>
         <span class="tile-t"><b>Inkwell</b><small>Documents &middot; .docx, .md, .txt</small></span>
         <i data-i="chevR" data-c="go"></i>
       </a>
-      <a class="tile" href="abacus.html" style="--c:#5c7a2e">
+      <a class="tile" href="abacus.html" style="--c:#a9824f">
         <span class="tile-i"><i data-i="table"></i></span>
         <span class="tile-t"><b>Abacus</b><small>Spreadsheets &middot; .xlsx, .csv</small></span>
         <i data-i="chevR" data-c="go"></i>
       </a>
-      <a class="tile" href="marquee.html" style="--c:#b4552d">
+      <a class="tile" href="marquee.html" style="--c:#8c4a55">
         <span class="tile-i"><i data-i="present"></i></span>
         <span class="tile-t"><b>Marquee</b><small>Presentations &middot; .pptx</small></span>
         <i data-i="chevR" data-c="go"></i>
       </a>
-      <a class="tile" href="parchment.html" style="--c:#8a3f5f">
+      <a class="tile" href="parchment.html" style="--c:#a3796d">
         <span class="tile-i"><i data-i="files"></i></span>
         <span class="tile-t"><b>Parchment</b><small>PDF reader &amp; editor</small></span>
         <i data-i="chevR" data-c="go"></i>
@@ -74,7 +74,7 @@
   const $ = s => document.querySelector(s);
   const list = $("#recentList");
   const label = { inkwell: "Inkwell", abacus: "Abacus", marquee: "Marquee", parchment: "Parchment" };
-  const color = { inkwell: "#2b6f8e", abacus: "#5c7a2e", marquee: "#b4552d", parchment: "#8a3f5f" };
+  const color = { inkwell: "#b06a73", abacus: "#a9824f", marquee: "#8c4a55", parchment: "#a3796d" };
 
   async function render(){
     let items = [];
