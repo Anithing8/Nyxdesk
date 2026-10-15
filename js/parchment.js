@@ -192,7 +192,7 @@
       { label: "APPROVED", run: () => addAnn(p, { id: newId(), type: "stamp", x, y, w: .22, h: .06, color: "#2e8b4e", text: "APPROVED" }) },
       { label: "DRAFT", run: () => addAnn(p, { id: newId(), type: "stamp", x, y, w: .16, h: .06, color: "#b3402f", text: "DRAFT" }) },
       { label: "CONFIDENTIAL", run: () => addAnn(p, { id: newId(), type: "stamp", x, y, w: .3, h: .06, color: "#b3402f", text: "CONFIDENTIAL" }) },
-      { label: "SIGNED " + new Date().toLocaleDateString(), run: () => addAnn(p, { id: newId(), type: "stamp", x, y, w: .26, h: .06, color: "#2b6f8e", text: "SIGNED " + new Date().toLocaleDateString() }) }
+      { label: "SIGNED " + new Date().toLocaleDateString(), run: () => addAnn(p, { id: newId(), type: "stamp", x, y, w: .26, h: .06, color: "#b06a73", text: "SIGNED " + new Date().toLocaleDateString() }) }
     ], { at: { x: 200, y: 200 } });
   }
   async function placeImage(p, x, y){
@@ -462,6 +462,10 @@
   $("#docTitle").addEventListener("input", () => S.touch());
 
   (async function init(){
+    if(N.isPhone()){
+      const fit = N.clamp(Math.round(($("#pdfwrap").clientWidth - 28) / BLANK_W * 100), 40, 300);
+      zoom = fit / 100; $("#zoomRange").value = fit; $("#zoomLabel").textContent = fit + "%";
+    }
     const handed = await S.takeHandoff();
     if(handed){ await openFile(handed); }
     else await S.load();

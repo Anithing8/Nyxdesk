@@ -5,7 +5,7 @@
   const W = 960, H = 540;
 
   const THEMES = [
-    { name: "Ink", bg: "#ffffff", ink: "#1c1b19", accent: "#2b6f8e", font: "Inter" },
+    { name: "Ink", bg: "#ffffff", ink: "#1c1b19", accent: "#b06a73", font: "Inter" },
     { name: "Clay", bg: "#fbf4ea", ink: "#3a2f22", accent: "#b4552d", font: "Georgia" },
     { name: "Slate", bg: "#20242b", ink: "#eef1f6", accent: "#7fb0e0", font: "Inter" },
     { name: "Sage", bg: "#f3f6ee", ink: "#273321", accent: "#5c7a2e", font: "Verdana" },
@@ -236,15 +236,22 @@
   $("#transSel").addEventListener("change", e => { curSlide().transition = e.target.value; S.touch(); });
 
   /* view */
-  $("#viewGridBtn").addEventListener("click", () => N.toast("Slide sorter: the thumbnail rail on the left — drag isn't available yet, but you can delete and reorder via duplicate/new."));
+  $("#viewGridBtn").addEventListener("click", () => { $("#thumbSide").hidden = !$("#thumbSide").hidden; });
+  $("#thumbClose") && $("#thumbClose").addEventListener("click", () => $("#thumbSide").hidden = true);
   $("#viewNotesBtn").addEventListener("click", () => { $("#notesPanel").hidden = !$("#notesPanel").hidden; });
   $("#notesArea").addEventListener("input", e => { curSlide().notes = e.target.value; S.touch(); });
 
   /* zoom */
-  function applyZoom(){ slideEl.style.setProperty("--zoom", $("#zoomRange").value / 100); $("#zoomLabel").textContent = $("#zoomRange").value + "%"; }
+  function applyZoom(){
+    const z = $("#zoomRange").value / 100;
+    slideEl.style.setProperty("--zoom", z);
+    $("#slideFrame").style.width = (W * z) + "px";
+    $("#slideFrame").style.height = (H * z) + "px";
+    $("#zoomLabel").textContent = $("#zoomRange").value + "%";
+  }
   $("#zoomRange").addEventListener("input", applyZoom);
   $("#zoomIn").addEventListener("click", () => { $("#zoomRange").value = Math.min(150, +$("#zoomRange").value + 10); applyZoom(); });
-  $("#zoomOut").addEventListener("click", () => { $("#zoomRange").value = Math.max(40, +$("#zoomRange").value - 10); applyZoom(); });
+  $("#zoomOut").addEventListener("click", () => { $("#zoomRange").value = Math.max(25, +$("#zoomRange").value - 10); applyZoom(); });
 
   /* ---------- present mode ---------- */
   let pIndex = 0;
@@ -333,6 +340,11 @@
   $("#docTitle").addEventListener("input", () => S.touch());
 
   (async function init(){
+    if(N.isPhone()){
+      $("#thumbSide").hidden = true;
+      const avail = $("#canvasWrap").clientWidth - 32 - 8;
+      $("#zoomRange").value = N.clamp(Math.round(avail / W * 100), 25, 100);
+    }
     const had = await S.load();
     if(!had) render();
     applyZoom();

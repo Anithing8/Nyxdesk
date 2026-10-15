@@ -241,10 +241,10 @@
   ]));
   function insertShapeSvg(kind){
     const svgs = {
-      rect: '<svg width="160" height="90" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="154" height="84" fill="#eef2f6" stroke="#2b6f8e" stroke-width="2"/></svg>',
-      ellipse: '<svg width="160" height="90" xmlns="http://www.w3.org/2000/svg"><ellipse cx="80" cy="45" rx="76" ry="42" fill="#eef2f6" stroke="#2b6f8e" stroke-width="2"/></svg>',
-      line: '<svg width="160" height="40" xmlns="http://www.w3.org/2000/svg"><line x1="4" y1="20" x2="156" y2="20" stroke="#2b6f8e" stroke-width="2"/></svg>',
-      arrow: '<svg width="160" height="40" xmlns="http://www.w3.org/2000/svg"><defs><marker id="a" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2b6f8e"/></marker></defs><line x1="4" y1="20" x2="148" y2="20" stroke="#2b6f8e" stroke-width="2" marker-end="url(#a)"/></svg>'
+      rect: '<svg width="160" height="90" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="154" height="84" fill="#eef2f6" stroke="#b06a73" stroke-width="2"/></svg>',
+      ellipse: '<svg width="160" height="90" xmlns="http://www.w3.org/2000/svg"><ellipse cx="80" cy="45" rx="76" ry="42" fill="#eef2f6" stroke="#b06a73" stroke-width="2"/></svg>',
+      line: '<svg width="160" height="40" xmlns="http://www.w3.org/2000/svg"><line x1="4" y1="20" x2="156" y2="20" stroke="#b06a73" stroke-width="2"/></svg>',
+      arrow: '<svg width="160" height="40" xmlns="http://www.w3.org/2000/svg"><defs><marker id="a" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#b06a73"/></marker></defs><line x1="4" y1="20" x2="148" y2="20" stroke="#b06a73" stroke-width="2" marker-end="url(#a)"/></svg>'
     };
     exec("insertHTML", `<img src="data:image/svg+xml;utf8,${encodeURIComponent(svgs[kind])}" style="max-width:100%">`);
   }
@@ -339,7 +339,7 @@
     const which = await N.prompt("Insert citation", "", { label: "Author, Year (type a new source, or pick one already used: " + (sources.join(" · ") || "none yet") + ")" });
     if(!which) return;
     if(!sources.includes(which)) sources.push(which);
-    exec("insertHTML", ` <span style="color:#2b6f8e">(${N.esc(which)})</span>`);
+    exec("insertHTML", ` <span style="color:#b06a73">(${N.esc(which)})</span>`);
   });
   $("#captionBtn").addEventListener("click", async () => {
     const t = await N.prompt("Insert caption", "Figure " + (editor.querySelectorAll(".caption").length + 1), { label: "Caption text" });
@@ -478,14 +478,24 @@
   }
   $("#navClose").addEventListener("click", () => $("#navSide").hidden = true);
   $("#rulerChk").addEventListener("change", e => document.body.classList.toggle("show-ruler", e.target.checked));
-  document.body.classList.add("show-ruler");
+  if(!N.isPhone()){ document.body.classList.add("show-ruler"); $("#rulerChk").checked = true; }
+  else { $("#rulerChk").checked = false; }
   $("#marksChk").addEventListener("change", e => editor.classList.toggle("marks", e.target.checked));
 
-  /* zoom */
-  const zr = $("#zoomRange");
-  zr.addEventListener("input", () => { const z = zr.value; $("#pages").style.transform = "scale(" + (z / 100) + ")"; $("#pages").style.transformOrigin = "top center"; $("#zoomLabel").textContent = z + "%"; });
-  $("#zoomIn").addEventListener("click", () => { zr.value = Math.min(200, +zr.value + 10); zr.dispatchEvent(new Event("input")); });
-  $("#zoomOut").addEventListener("click", () => { zr.value = Math.max(50, +zr.value - 10); zr.dispatchEvent(new Event("input")); });
+  /* zoom — #pages stays native size and is visually scaled; #pagesOuter is given the
+     resulting scaled box size so it participates correctly in centering and scrolling. */
+  const zr = $("#zoomRange"), pagesEl = $("#pages"), pagesOuter = $("#pagesOuter");
+  function applyZoom(){
+    const z = zr.value / 100;
+    pagesEl.style.transform = "scale(" + z + ")";
+    pagesOuter.style.width = (pagesEl.scrollWidth * z) + "px";
+    pagesOuter.style.height = (pagesEl.scrollHeight * z) + "px";
+    $("#zoomLabel").textContent = zr.value + "%";
+  }
+  zr.addEventListener("input", applyZoom);
+  $("#zoomIn").addEventListener("click", () => { zr.value = Math.min(200, +zr.value + 10); applyZoom(); });
+  $("#zoomOut").addEventListener("click", () => { zr.value = Math.max(30, +zr.value - 10); applyZoom(); });
+  new ResizeObserver(applyZoom).observe(pagesEl);
 
   /* track changes (lightweight: marks insertions, strikes deletions) */
   $("#trackChk").addEventListener("change", e => { trackOn = e.target.checked; });
@@ -752,5 +762,10 @@
     if(handed){ await importFile(handed); S.touch(); }
     else { const had = await S.load(); if(!had) editor.innerHTML = "<p><br></p>"; }
     applyPageMeta(); updateCounts(); refreshComments();
+    if(N.isPhone()){
+      const avail = $("#workspace").clientWidth - 36 - 8; // minus horizontal padding and a safety margin
+      const fit = N.clamp(Math.round(avail / 816 * 100), 30, 100);
+      zr.value = fit; zr.dispatchEvent(new Event("input"));
+    }
   })();
 })();
