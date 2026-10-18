@@ -8,7 +8,7 @@ download straight to your computer or phone.
 
 **Live app:** enable GitHub Pages on this repo (Settings → Pages → Deploy
 from branch → `main` / root) and it'll be served at
-`https://<your-username>.github.io/<repo-name>/`.
+`https://github.com/Anithing8/Nyxdesk`.
 
 ## The four tools
 
