@@ -1,0 +1,32 @@
+.pdfwrap{flex:1;overflow:auto;background:var(--bg);display:flex;flex-direction:column;align-items:center;padding:20px 16px 120px;position:relative}
+.dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);text-align:center;margin-top:10vh;max-width:360px}
+.dropzone svg.i.lg{width:46px;height:46px;color:var(--faint)}
+.dropzone p{font-size:14px}
+.dropzone .hint{font-size:12.5px;color:var(--faint)}
+.pages{display:flex;flex-direction:column;gap:18px;align-items:center}
+.pdfpage{position:relative;background:#fff;box-shadow:var(--shadow-lg)}
+.pdfpage canvas{display:block}
+.pdfpage .overlay{position:absolute;inset:0}
+.pdfpage .annot{position:absolute;pointer-events:auto}
+.pdfpage .annot.highlight{mix-blend-mode:multiply}
+.pdfpage .annot.note{width:22px;height:22px;background:#ffcf4d;border-radius:4px 4px 4px 0;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.pdfpage .annot.note svg{width:14px;height:14px;color:#6b4a00}
+.pdfpage .annot.text{outline:none;cursor:text;white-space:pre-wrap;font-family:var(--font)}
+.pdfpage .annot.shape{border:2px solid;background:transparent}
+.pdfpage .annot.whiteout{background:#fff}
+.pdfpage .annot.redact{background:#111}
+.pdfpage .annot.field{border:1.5px dashed var(--app);background:rgba(58,95,79,.08);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--app)}
+.pdfpage .annot.sel{outline:2px solid var(--focus)}
+.pdfpage .pagenum{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:11.5px;color:var(--faint)}
+.thumbSide-item{border:2px solid var(--line);border-radius:6px;overflow:hidden;cursor:pointer;margin-bottom:10px;position:relative}
+.thumbSide-item.on{border-color:var(--app)}
+.thumbSide-item img{width:100%;display:block}
+.thumbSide-item .tn{position:absolute;left:4px;top:3px;font-size:10px;background:rgba(255,255,255,.8);padding:0 4px;border-radius:3px}
+#thumbSide{width:150px}
+.rb[data-tool].on{background:var(--app-soft);color:var(--app)}
+@media (max-width:720px){ #thumbSide{position:absolute;z-index:50;background:var(--surface)} }
+
+/* marking tools take over touch drags on the page; select/pan leave them free so the page still scrolls */
+.pdfwrap.marking .pdfpage .overlay{touch-action:none}
+.pdfpage .overlay{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#pdfPages{will-change:transform}

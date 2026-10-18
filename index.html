@@ -1,12 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Nyxdesk</title>
-<meta name="description" content="Write documents, work with spreadsheets, build presentations and edit PDFs in your browser. Files stay on your device.">
-<meta name="theme-color" content="#efede8">
+<title>Nyxdesk — documents, sheets, decks and PDFs on your device</title>
+<meta name="description" content="Open, edit and save documents, spreadsheets, presentations and PDFs. Everything stays on your device.">
+<meta name="theme-color" content="#161213">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/home.css">
@@ -14,67 +15,64 @@
 <script src="js/core.js"></script>
 </head>
 <body class="home">
+<canvas id="backdrop" aria-hidden="true"></canvas>
+<div class="veil" aria-hidden="true"></div>
 
 <header class="top">
-  <a class="brand" href="./"><span class="mark"><svg viewBox="0 0 24 24"><path d="M6 19V5l12 14V5"/></svg></span><span>Nyxdesk</span></a>
+  <a class="brand" href="./" aria-label="Nyxdesk home"><span class="mark"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span><span class="wordmark">Nyxdesk</span></a>
   <span class="sp"></span>
+  <button class="pill" id="installBtn" hidden><i data-i="dl"></i><span>Install</span></button>
   <button class="ib" data-theme-toggle title="Switch light / dark" aria-label="Switch light or dark theme"><i data-i="moon"></i></button>
 </header>
 
-<main class="wrap">
-  <div class="lead">
-    <h1>Your files, <em>on your desk.</em></h1>
-    <p>Four small tools for documents, spreadsheets, presentations and PDFs. Everything opens and saves on this device &mdash; nothing is uploaded.</p>
-  </div>
+<main class="stage">
+  <section class="hero" aria-labelledby="h1">
+    <p class="eyebrow rise" style="--d:0ms">Offline office suite &nbsp;·&nbsp; nothing is uploaded</p>
+    <h1 id="h1" class="rise" style="--d:90ms">Your files,<br><em>on your desk.</em></h1>
+    <p class="lede rise" style="--d:200ms">Write, calculate, present and annotate. Open a file from your phone or computer, change it, and save it back &mdash; it never leaves this device.</p>
 
-  <div class="cols">
-    <section class="new" aria-labelledby="h-new">
-      <h2 id="h-new">Start something</h2>
-      <a class="tile" href="inkwell.html" style="--c:#b06a73">
-        <span class="tile-i"><i data-i="filetext"></i></span>
-        <span class="tile-t"><b>Inkwell</b><small>Documents &middot; .docx, .md, .txt</small></span>
-        <i data-i="chevR" data-c="go"></i>
-      </a>
-      <a class="tile" href="abacus.html" style="--c:#a9824f">
-        <span class="tile-i"><i data-i="table"></i></span>
-        <span class="tile-t"><b>Abacus</b><small>Spreadsheets &middot; .xlsx, .csv</small></span>
-        <i data-i="chevR" data-c="go"></i>
-      </a>
-      <a class="tile" href="marquee.html" style="--c:#8c4a55">
-        <span class="tile-i"><i data-i="present"></i></span>
-        <span class="tile-t"><b>Marquee</b><small>Presentations &middot; .pptx</small></span>
-        <i data-i="chevR" data-c="go"></i>
-      </a>
-      <a class="tile" href="parchment.html" style="--c:#a3796d">
-        <span class="tile-i"><i data-i="files"></i></span>
-        <span class="tile-t"><b>Parchment</b><small>PDF reader &amp; editor</small></span>
-        <i data-i="chevR" data-c="go"></i>
-      </a>
+    <div class="cta rise" style="--d:300ms">
+      <button class="open" id="openBtn" type="button"><i data-i="open"></i><span id="openLabel">Open a file</span></button>
+      <p class="drop-hint">or drop one anywhere on this page</p>
+    </div>
+    <p class="formats rise" style="--d:380ms" aria-label="Supported formats"><span>docx</span><span>xlsx</span><span>pptx</span><span>pdf</span><span>csv</span><span>md</span><span>txt</span></p>
+  </section>
 
-      <div class="openbox" id="openbox">
-        <button class="btn" id="openBtn"><i data-i="open"></i>Open a file…</button>
-        <p>or drop one anywhere on this page. It will open in the matching tool.</p>
-      </div>
-    </section>
+  <section class="rail" aria-label="Tools and saved files">
+    <nav class="index" aria-label="Start something new">
+      <p class="label rise" style="--d:260ms">Start something</p>
+      <a class="row rise" style="--d:300ms;--c:#e0a4ae" href="inkwell.html"><span class="no">01</span><span class="nm">Inkwell</span><span class="ds">Documents<small>.docx · .md · .txt</small></span><i data-i="chevR" data-c="go"></i></a>
+      <a class="row rise" style="--d:350ms;--c:#d8b07c" href="abacus.html"><span class="no">02</span><span class="nm">Abacus</span><span class="ds">Spreadsheets<small>.xlsx · .csv</small></span><i data-i="chevR" data-c="go"></i></a>
+      <a class="row rise" style="--d:400ms;--c:#d68a9a" href="marquee.html"><span class="no">03</span><span class="nm">Marquee</span><span class="ds">Presentations<small>.pptx</small></span><i data-i="chevR" data-c="go"></i></a>
+      <a class="row rise" style="--d:450ms;--c:#d1a99c" href="parchment.html"><span class="no">04</span><span class="nm">Parchment</span><span class="ds">PDF editor<small>.pdf</small></span><i data-i="chevR" data-c="go"></i></a>
+    </nav>
 
-    <section class="recent" aria-labelledby="h-recent">
-      <div class="rh"><h2 id="h-recent">Saved on this device</h2></div>
+    <section class="ledger rise" style="--d:520ms" aria-labelledby="h-recent">
+      <p class="label" id="h-recent">Saved on this device</p>
       <div id="recentList" class="rlist" aria-live="polite"></div>
     </section>
-  </div>
+  </section>
 </main>
 
 <footer class="foot">
-  <p>Files are kept in this browser&rsquo;s own storage and never leave your device. There are no accounts, no analytics and no third-party requests. Clearing site data or switching browsers removes saved files, so use <em>Save as</em> for anything you want to keep.</p>
-  <p class="links"><a href="NOTICE.md">Open-source notices</a><span>&middot;</span><button id="wipe" class="lnk">Delete all saved files</button></p>
+  <p>Files are kept in this browser&rsquo;s own storage. No accounts, no analytics, no third-party requests. Clearing site data removes saved files, so export anything you want to keep.</p>
+  <p class="links">
+    <a href="NOTICE.md">Open-source notices</a><span aria-hidden="true">·</span>
+    <button id="wipe" class="lnk" type="button">Delete all saved files</button>
+    <span aria-hidden="true" class="ios-only">·</span><span class="ios-only">On iPhone: Share &rarr; Add to Home Screen</span>
+  </p>
 </footer>
 
+<div class="dropveil" id="dropveil" aria-hidden="true"><div><b>Release to open</b><span>It will open in the matching tool</span></div></div>
+
+<script src="js/backdrop.js"></script>
 <script>
 (function(){
+  "use strict";
   const $ = s => document.querySelector(s);
   const list = $("#recentList");
   const label = { inkwell: "Inkwell", abacus: "Abacus", marquee: "Marquee", parchment: "Parchment" };
-  const color = { inkwell: "#b06a73", abacus: "#a9824f", marquee: "#8c4a55", parchment: "#a3796d" };
+  const color = { inkwell: "#e0a4ae", abacus: "#d8b07c", marquee: "#d68a9a", parchment: "#d1a99c" };
 
   async function render(){
     let items = [];
@@ -82,37 +80,62 @@
     list.innerHTML = "";
     if(!items.length){
       list.append(Nyx.h("div", { class: "none" },
-        Nyx.h("p", null, "Nothing here yet."),
-        Nyx.h("p", { class: "sub" }, "Documents you write, sheets you build and decks you design are saved automatically and will show up in this list.")));
+        Nyx.h("p", null, "Nothing saved yet."),
+        Nyx.h("p", { class: "sub" }, "Whatever you write, build or open is saved here automatically.")));
       return;
     }
     items.forEach(m => {
       const app = Nyx.APPS[m.app]; if(!app) return;
-      const row = Nyx.h("a", { class: "rrow", href: app.page + "#" + m.id },
-        Nyx.h("span", { class: "tag", style: { "--c": color[m.app] } }, label[m.app]),
+      list.append(Nyx.h("a", { class: "rrow", href: app.page + "#" + m.id, style: { "--c": color[m.app] } },
+        Nyx.h("span", { class: "tag" }, label[m.app]),
         Nyx.h("span", { class: "nm" }, m.title || "Untitled"),
         Nyx.h("span", { class: "when" }, Nyx.ago(m.updated)),
-        Nyx.h("button", { class: "ib", type: "button", title: "Delete", "aria-label": "Delete " + m.title, onclick: async e => {
+        Nyx.h("button", { class: "ib", type: "button", title: "Delete", "aria-label": "Delete " + (m.title || "file"), onclick: async e => {
           e.preventDefault(); e.stopPropagation();
-          if(await Nyx.confirm("Delete “" + m.title + "” from this browser? This can't be undone.", { ok: "Delete", danger: true })){ await Nyx.store.del(m.id); render(); }
-        } }, Nyx.icEl("trash")));
-      list.append(row);
+          if(await Nyx.confirm("Delete “" + (m.title || "Untitled") + "” from this browser? This can't be undone.", { ok: "Delete", danger: true })){ await Nyx.store.del(m.id); render(); }
+        } }, Nyx.icEl("trash"))));
     });
   }
   render();
 
+  let busy = false;
   async function openFiles(files){
-    if(!files.length) return;
-    const f = files[0];
-    if(!Nyx.appForFile(f.name)){ Nyx.toast("Nyxdesk can't open “" + f.name.split(".").pop() + "” files."); return; }
-    await Nyx.openInApp(f, null);
+    if(busy || !files || !files.length) return;
+    const f = Nyx.normalize(files[0]);
+    if(!Nyx.appForFile(f.name)){ Nyx.toast("Nyxdesk can't open “" + (f.name.split(".").pop() || f.name) + "” files yet."); return; }
+    busy = true; $("#openLabel").textContent = "Opening…";
+    try{ await Nyx.openInApp(f, null); }
+    finally{ setTimeout(() => { busy = false; $("#openLabel").textContent = "Open a file"; }, 1500); }
   }
   $("#openBtn").addEventListener("click", async () => {
     const all = Object.values(Nyx.APPS).flatMap(a => a.ext).join(",");
     openFiles(await Nyx.pick(all));
   });
-  addEventListener("dragover", e => e.preventDefault());
-  addEventListener("drop", e => { e.preventDefault(); openFiles([...e.dataTransfer.files]); });
+
+  /* drag & drop anywhere (desktop) */
+  const veil = $("#dropveil"); let depth = 0;
+  const hasFiles = e => e.dataTransfer && [...e.dataTransfer.types].includes("Files");
+  addEventListener("dragenter", e => { if(hasFiles(e)){ depth++; veil.classList.add("on"); } });
+  addEventListener("dragleave", () => { depth = Math.max(0, depth - 1); if(!depth) veil.classList.remove("on"); });
+  addEventListener("dragover", e => { if(hasFiles(e)) e.preventDefault(); });
+  addEventListener("drop", e => { if(!hasFiles(e)) return; e.preventDefault(); depth = 0; veil.classList.remove("on"); openFiles([...e.dataTransfer.files]); });
+
+  /* a file shared to Nyxdesk from the phone's share sheet, or opened with Nyxdesk from the OS */
+  (async function(){
+    const q = new URLSearchParams(location.search);
+    if(q.get("shared") === "1"){
+      history.replaceState(null, "", location.pathname);
+      const pk = await Nyx.store.peekHandoff();
+      const app = pk && Nyx.appForFile(pk.name);
+      if(app){ location.replace(Nyx.APPS[app].page + "#open"); return; }
+      Nyx.toast("That file type isn't supported.");
+    }else if(q.get("shared") === "0"){
+      history.replaceState(null, "", location.pathname); Nyx.toast("Couldn't receive the shared file.");
+    }
+  })();
+  if("launchQueue" in window){
+    launchQueue.setConsumer(async p => { if(p.files && p.files.length){ try{ openFiles([await p.files[0].getFile()]); }catch(e){} } });
+  }
 
   $("#wipe").addEventListener("click", async () => {
     if(await Nyx.confirm("This removes every document, sheet, deck and PDF saved in this browser. Files you've downloaded aren't affected.", { title: "Delete all saved files?", ok: "Delete everything", danger: true })){
@@ -120,10 +143,17 @@
     }
   });
 
-  const tb = document.querySelector("[data-theme-toggle]");
+  /* install */
+  let deferred = null;
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; $("#installBtn").hidden = false; });
+  $("#installBtn").addEventListener("click", async () => { if(!deferred) return; deferred.prompt(); try{ await deferred.userChoice; }catch(e){} deferred = null; $("#installBtn").hidden = true; });
+  addEventListener("appinstalled", () => { $("#installBtn").hidden = true; });
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if(!/iPhone|iPad|iPod/.test(navigator.userAgent) || standalone) document.querySelectorAll(".ios-only").forEach(e => e.remove());
+
+  const tb = $("[data-theme-toggle]");
   const sync = () => { tb.innerHTML = Nyx.ic(Nyx.theme() === "dark" ? "sun" : "moon"); };
   sync(); document.addEventListener("nyx-theme", sync);
-  if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("sw.js").catch(() => {});
 })();
 </script>
 </body>

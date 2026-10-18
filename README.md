@@ -12,67 +12,41 @@ from branch → `main` / root) and it'll be served at
 
 ## The four tools
 
-| Tool | What it's for | Opens / saves |
-|---|---|---|
-| **Inkwell** | Documents | `.docx`, `.md`, `.html`, `.txt` |
-| **Abacus** | Spreadsheets | `.xlsx`, `.csv`, `.tsv` |
-| **Marquee** | Presentations | `.pptx` |
-| **Parchment** | Reading, annotating and editing PDFs | `.pdf` |
+| Tool | For | Opens | Saves |
+|---|---|---|---|
+| **Inkwell** | Documents | `.docx` `.md` `.txt` `.html` | `.docx` `.md` `.txt` `.html` |
+| **Abacus** | Spreadsheets | `.xlsx` `.csv` `.tsv` | `.xlsx` `.csv` |
+| **Marquee** | Presentations | `.pptx` | `.pptx` |
+| **Parchment** | PDFs | `.pdf` | `.pdf` |
 
-### Inkwell
-Rich-text formatting (fonts, sizes, colors, highlight, styles, headings),
-bullet/numbered/checklist lists, tables, images, links, headers & footers,
-page numbers, page breaks, margins/orientation/size/columns, watermark and
-page color, a table of contents that builds itself from your headings,
-footnotes, citations, captions, comments, a basic track-changes mode, find &
-replace, word count, an outline view, and export to Word, Markdown, HTML,
-plain text, or print to PDF.
+Everything autosaves to your browser's own storage and nothing is uploaded.
 
-### Abacus
-A real formula engine (cell references, ranges, and 40+ functions —
-`SUM`, `AVERAGE`, `IF`, `VLOOKUP`, `SUMIF`, text functions, and more),
-multiple sheets, cell formatting (bold/italic/underline, fill & text color,
-borders, number/currency/percent formats, alignment, wrap), sort, remove
-duplicates, simple data validation, notes, inline charts (column/line/pie),
-and import/export to Excel (`.xlsx`) and CSV.
+**Inkwell** reflows to the screen on a phone (no shrunken page). Word export includes real numbered lists, links, inline formatting, images, tables and every page.
 
-### Marquee
-Slide layouts, a small set of built-in themes, text boxes, images, shapes,
-lines, tables, charts, icons, drag-to-position and resize, slide transitions,
-speaker notes, a full-screen presenter mode with keyboard navigation, and
-export to PowerPoint (`.pptx`).
+**Abacus** has a formula engine, undo/redo, insert/delete rows and columns (formulas follow), merge, freeze, filter, data validation drop-downs, sort, de-duplicate, charts, and `.xlsx` import/export that keeps bold/italic, colours, fills, number formats, merges, column widths and frozen panes. On a phone: tap a cell to select it, tap it again to edit, or use the formula bar; switch on the pointer button to drag-select a range.
 
-### Parchment
-Open and view any PDF (continuous scroll, zoom, page thumbnails, text
-search), annotate it (highlight, underline, strikeout, freehand drawing,
-sticky notes, text boxes, shapes, stamps), edit it (add text/images,
-whiteout, genuine redaction — the redacted page is flattened to an image
-on export so the covered text isn't just hidden, it's gone), manage pages
-(rotate, delete, duplicate, insert blank pages, extract, merge multiple
-PDFs, split into one-file-per-page), add basic form-style fields, and
-export the result as a new PDF.
+**Marquee** opens real `.pptx` files (text with formatting, shapes, pictures, tables, backgrounds, notes) and edits them by touch or mouse. Drag a text box by its grip; drag pictures and shapes anywhere.
 
-## What's intentionally not included
+**Parchment** renders pages lazily (long PDFs stay fast), draws and highlights with a finger, pans with the hand tool, pinch-zooms, and exports with your markup baked in.
 
-Being upfront about scope, the same way good open-source projects are:
+## Using it on a phone
 
-- **No password/encryption support in Parchment.** The PDF library this project
-  uses doesn't implement PDF encryption, and that's not something to fake.
-- **No OCR ("make scanned pages searchable").** Real text recognition needs
-  an on-device model that isn't bundled here.
-- **No macros/scripting** in any app — running arbitrary recorded scripts
-  safely inside a browser tab isn't realistic.
-- **No mail merge, no cloud co-authoring, no "send as email" integration** —
-  all of those need a mail or identity service this project deliberately
-  doesn't depend on.
-- **Opening `.docx` and `.xlsx` files uses a small built-in reader**, not a
-  full implementation of either format, so unusual or very complex files may
-  not come through perfectly. Exporting is likewise a solid, broadly
-  compatible subset of each format rather than a byte-for-byte clone of
-  Word/Excel/PowerPoint's own output.
+* **Open a file** on the home screen uses the system file picker.
+* **Install it** (Chrome: *Install*; Safari: *Share → Add to Home Screen*) to run it full-screen and offline.
+* On **Android Chrome**, once installed, Nyxdesk appears in the system **Share** sheet, so you can send a file to it straight from your file manager, mail or messages. (Not available on iOS — use *Open a file* there.)
+* On desktop Chrome, an installed Nyxdesk can be chosen under *Open with…* for supported files.
 
-None of the above is hidden or silently stubbed out — each one tells you
-plainly in the app if you try to use it.
+## What's intentionally not included / known limits
+
+* Password-protecting a PDF; moving an annotation after placing it.
+* Abacus: no references between sheets, no fill-handle drag, charts are simple (column, line, pie). Imported `.xlsx` conditional formatting, pivot tables and images are dropped.
+* Inkwell: Word styles, headers/footers and comments aren't round-tripped; numbered lists from an opened `.docx` come in as bullets.
+* Marquee: charts, SmartArt, animations and master-slide styling in an opened `.pptx` aren't reproduced (charts show a placeholder); fonts are approximated.
+* Large `.xlsx` files: up to 5,000 rows × 104 columns are shown.
+
+## Testing
+
+The behaviour above was exercised in headless Chromium at desktop and iPhone-sized viewports (touch events included): typing, formatting, undo, import/export round-trips of real `.docx/.xlsx/.pptx/.pdf` files, offline reload, and the share-target path. It has **not** been run on physical iOS or Android hardware, so please report anything that behaves differently in Safari.
 
 ## Running it locally
 
@@ -98,6 +72,8 @@ marquee.html + js/marquee.js + css/marquee.css    Presentations
 parchment.html + js/parchment.js + css/parchment.css   PDF tool
 js/core.js          Shared runtime: theme, dialogs, menus, local storage, autosave
 js/icons.js         Generated icon set (see NOTICE.md)
+js/backdrop.js      The animated WebGL backdrop on the home screen (stills if WebGL or motion is unavailable)
+icons/               PNG app icons for installing
 css/base.css         Shared design tokens and app chrome
 vendor/              Vendored third-party libraries (see NOTICE.md)
 manifest.webmanifest, sw.js    Installable app + offline support

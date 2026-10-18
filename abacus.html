@@ -4,8 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Abacus — Nyxdesk</title>
-<meta name="theme-color" content="#5c7a2e">
+<meta name="theme-color" content="#161213">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/abacus.css">
 <script src="js/icons.js"></script>
@@ -15,7 +17,7 @@
 <div class="app">
 
   <div class="bar">
-    <a class="home" href="./" title="Home"><span class="mark"><svg viewBox="0 0 24 24"><path d="M6 19V5l12 14V5"/></svg></span><span class="wm">Nyxdesk</span></a>
+    <a class="home" href="./" title="Home"><span class="mark"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span><span class="wm">Nyxdesk</span></a>
     <span class="appname">Abacus</span>
     <button class="btn filebtn" id="fileMenuBtn"><i data-i="chevD"></i>File</button>
     <input class="title-in" id="docTitle" value="Untitled spreadsheet" aria-label="Spreadsheet title" spellcheck="false">
@@ -78,8 +80,8 @@
       </div><div class="rg-label">Number</div></div>
 
       <div class="rg"><div class="rg-body col">
-        <button class="rb tx" id="insRowBtn"><i data-i="rowins"></i>Row</button>
-        <button class="rb tx" id="insColBtn"><i data-i="colins"></i>Column</button>
+        <button class="rb tx" id="insRowBtn"><i data-i="rowins"></i>Rows</button>
+        <button class="rb tx" id="insColBtn"><i data-i="colins"></i>Columns</button>
       </div><div class="rg-label">Cells</div></div>
     </div>
 
@@ -128,7 +130,9 @@
   <div class="formulabar">
     <span class="cellref" id="cellRef">A1</span>
     <span class="fxlabel"><i data-i="fx"></i></span>
-    <input class="inp" id="formulaInput" spellcheck="false" autocomplete="off">
+    <input class="inp" id="formulaInput" spellcheck="false" autocomplete="off" autocapitalize="off" enterkeyhint="done" aria-label="Cell contents">
+    <button class="ib" id="editBtn" title="Edit this cell" aria-label="Edit this cell"><i data-i="pen"></i></button>
+    <button class="ib" id="rangeBtn" title="Select a range by dragging" aria-label="Range select" aria-pressed="false"><i data-i="cursor"></i></button>
   </div>
 
   <div class="body">
