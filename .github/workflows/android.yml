@@ -1,0 +1,65 @@
+name: Build Android app
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Unpack PDF character maps
+        run: |
+          if [ -f web/vendor/pdfjs/cmaps.zip ]; then
+            unzip -q web/vendor/pdfjs/cmaps.zip -d web/vendor/pdfjs/
+            rm web/vendor/pdfjs/cmaps.zip
+          fi
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          # The default package list includes the retired "tools" package, which
+          # no longer exists and makes sdkmanager exit with code 1.
+          packages: "platform-tools platforms;android-34 build-tools;34.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Build APK
+        run: gradle assembleDebug --stacktrace
+
+      - name: Collect APK
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/Nyxdesk.apk
+
+      - name: Keep the APK with this run
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nyxdesk-apk
+          path: dist/Nyxdesk.apk
+
+      - name: Publish as the latest release
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Nyxdesk (latest build)
+          body: "Download **Nyxdesk.apk** below and open it on your Android phone to install."
+          files: dist/Nyxdesk.apk

@@ -1,0 +1,63 @@
+.pdfwrap{flex:1;overflow:auto;background:var(--bg);display:flex;flex-direction:column;align-items:flex-start;padding:20px 16px 120px;position:relative}
+.pdfwrap>.pages,.pdfwrap>.dropzone{margin-left:auto;margin-right:auto}
+.dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);text-align:center;margin-top:10vh;max-width:360px}
+.dropzone svg.i.lg{width:46px;height:46px;color:var(--faint)}
+.dropzone p{font-size:14px}
+.dropzone .hint{font-size:12.5px;color:var(--faint)}
+.pages{display:flex;flex-direction:column;gap:18px;align-items:center}
+.pdfpage{position:relative;background:#fff;box-shadow:var(--shadow-lg)}
+.pdfpage canvas{display:block}
+.pdfpage .overlay{position:absolute;inset:0}
+.pdfpage .annot{position:absolute;pointer-events:auto}
+.pdfpage .annot.highlight{mix-blend-mode:multiply}
+.pdfpage .annot.note{width:22px;height:22px;background:#ffcf4d;border-radius:4px 4px 4px 0;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.pdfpage .annot.note svg{width:14px;height:14px;color:#6b4a00}
+.pdfpage .annot.text{outline:none;cursor:text;white-space:pre-wrap;font-family:var(--font)}
+.pdfpage .annot.shape{border:2px solid;background:transparent}
+.pdfpage .annot.whiteout{background:#fff}
+.pdfpage .annot.redact{background:#111}
+.pdfpage .annot.field{border:1.5px dashed var(--app);background:rgba(58,95,79,.08);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--app)}
+.pdfpage .annot.sel{outline:2px solid var(--focus)}
+.pdfpage .pagenum{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:11.5px;color:var(--faint)}
+.thumbSide-item{border:2px solid var(--line);border-radius:6px;overflow:hidden;cursor:pointer;margin-bottom:10px;position:relative}
+.thumbSide-item.on{border-color:var(--app)}
+.thumbSide-item img{width:100%;display:block}
+.thumbSide-item .tn{position:absolute;left:4px;top:3px;font-size:10px;background:rgba(255,255,255,.8);padding:0 4px;border-radius:3px}
+#thumbSide{width:150px}
+.rb[data-tool].on{background:var(--app-soft);color:var(--app)}
+@media (max-width:720px){ #thumbSide{position:absolute;z-index:50;background:var(--surface)} }
+
+/* marking tools take over touch drags on the page; select/pan leave them free so the page still scrolls */
+.pdfwrap.marking .pdfpage .overlay{touch-action:none}
+.pdfpage .overlay{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#pdfPages{will-change:transform}
+
+/* ---- marks: move / resize / delete handles (finger-sized on touch) ---- */
+.pdfpage .annot.image img{display:block}
+.pdfpage .annot.text{min-width:30px}
+.pdfpage .annot.text .tin{outline:none;min-height:1em;padding:1px 2px;white-space:pre-wrap;-webkit-user-select:text;user-select:text;font-family:var(--font);line-height:1.2;cursor:text}
+.pdfpage .annot.sel{touch-action:none}
+.pdfpage .annot.text.sel{outline:1.5px dashed var(--focus)}
+.ahandle{touch-action:none}
+.ahandle.bar{position:absolute;left:0;top:-38px;display:flex;gap:4px;padding:3px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);z-index:20;transform:none!important}
+button.ahandle{width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:7px;background:transparent;color:var(--ink);padding:0;font:600 12px var(--font)}
+button.ahandle:active{background:var(--surface-3)}
+button.ahandle.del{color:var(--danger)}
+button.ahandle.mv{cursor:move}
+div.ahandle.se{position:absolute;right:-9px;bottom:-9px;width:16px;height:16px;border-radius:50%;background:var(--focus);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);cursor:nwse-resize;z-index:20}
+div.ahandle.se::after{content:"";position:absolute;inset:-14px}
+@media (pointer:coarse){ button.ahandle{width:40px;height:40px} .ahandle.bar{top:-50px} div.ahandle.se{width:20px;height:20px;right:-11px;bottom:-11px} }
+.pdfpage .annot.note{touch-action:manipulation}
+
+/* ---- find in document ---- */
+.findbar{position:absolute;top:8px;right:10px;z-index:40;display:flex;align-items:center;gap:2px;padding:4px 4px 4px 8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lg)}
+.findbar[hidden]{display:none}
+.findbar .inp{width:200px;height:34px}
+.findcount{font-size:12px;color:var(--muted);min-width:64px;text-align:center;white-space:nowrap}
+@media (max-width:720px){ .findbar{left:8px;right:8px} .findbar .inp{flex:1;width:auto;min-width:0} }
+.searchhit{position:absolute;background:rgba(255,214,0,.4);outline:1px solid rgba(190,140,0,.55);border-radius:2px;pointer-events:none;mix-blend-mode:multiply}
+.searchhit.cur{background:rgba(255,120,0,.45);outline:2px solid #e06a00}
+
+/* ---- page-by-page view ---- */
+.pdfwrap.paged{scroll-snap-type:y proximity}
+.pdfwrap.paged .pdfpage{scroll-snap-align:center}

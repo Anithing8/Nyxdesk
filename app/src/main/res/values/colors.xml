@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="night">#0E0B0C</color>
+    <color name="night_chrome">#161213</color>
+    <color name="icon_bg">#17120F</color>
+</resources>

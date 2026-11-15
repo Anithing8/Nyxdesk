@@ -1,0 +1,57 @@
+/* Abacus — spreadsheet grid. Cells are absolutely positioned (see abacus.js). */
+.formulabar{display:flex;align-items:center;gap:4px;height:40px;padding:0 6px 0 0;background:var(--surface);border-bottom:1px solid var(--line);flex:none}
+.cellref{width:76px;flex:none;font:600 12.5px var(--mono);color:var(--muted);text-align:center;border-right:1px solid var(--line);padding:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:40px}
+.fxlabel{color:var(--app);display:flex;padding-left:4px}
+#formulaInput{flex:1;border:1px solid transparent;background:transparent;height:32px;font:13.5px var(--mono);min-width:0}
+#formulaInput:focus{border-color:var(--line);background:var(--surface-2)}
+.formulabar .ib.on{background:var(--app);color:var(--app-ink)}
+.gridwrap{flex:1;overflow:auto;background:var(--surface);position:relative;outline:none;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.gridwrap.rangemode{touch-action:none}
+.sheet{position:relative;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.layer{position:absolute;left:0}
+.toplayer{position:sticky;top:0;z-index:6;left:0;pointer-events:auto}
+.bodylayer{position:absolute}
+.gridrow{position:absolute;left:0}
+.gh-corner,.gh-col,.gh-row{background:var(--surface-2);border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11.5px;color:var(--muted);box-sizing:border-box}
+.gh-corner{position:absolute;top:0;left:var(--sl,0px);z-index:8}
+.gh-col{position:absolute;top:0;font-weight:600;cursor:pointer}
+.gh-row{position:sticky;left:0;z-index:4;font-weight:600;cursor:pointer;float:left}
+.gh-col.sel,.gh-row.sel{background:var(--app-soft);color:var(--ink);box-shadow:inset 0 -2px 0 var(--app)}
+.gh-row.sel{box-shadow:inset -2px 0 0 var(--app)}
+.colresize{position:absolute;top:0;right:-5px;width:11px;height:100%;cursor:col-resize;z-index:9;touch-action:none}
+.rowresize{position:absolute;left:0;bottom:-5px;height:11px;width:100%;cursor:row-resize;z-index:9;touch-action:none}
+.cell{position:absolute;top:0;border-right:1px solid transparent;border-bottom:1px solid transparent;background:transparent;padding:0 6px;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:cell;box-sizing:border-box;display:block;line-height:1;display:flex;align-items:center;color:var(--ink)}
+.cell.num{justify-content:flex-end}
+body.show-grid .cell{border-right-color:var(--line-soft);border-bottom-color:var(--line-soft)}
+.cell.merged{z-index:1;background:var(--surface);border:1px solid var(--line)}
+.cell.frz{z-index:2;background:var(--surface);box-shadow:1px 0 0 var(--line)}
+.cell.err{color:var(--danger)}
+.cell.inrange{background:color-mix(in srgb,var(--focus) 14%,var(--surface))}
+.cell.sel{outline:2px solid var(--focus);outline-offset:-2px;z-index:3;background:color-mix(in srgb,var(--focus) 6%,var(--surface))}
+.cell .dd{margin-left:auto;font-size:10px;color:var(--faint);padding-left:4px}
+.cell .fbtn{margin-left:auto;flex:none;width:22px;height:22px;border:0;border-radius:4px;background:var(--surface-3);color:var(--muted);display:grid;place-items:center;padding:0}
+.cell .fbtn.on{background:var(--app);color:var(--app-ink)}
+.cell .fbtn svg{width:13px;height:13px}
+.celleditor{position:absolute;z-index:40;border:2px solid var(--focus);background:var(--surface);padding:0 6px;font:14px var(--font);color:var(--ink);outline:none;border-radius:2px;box-shadow:var(--shadow);min-width:60px}
+.sheettabs{display:flex;align-items:center;gap:2px;height:38px;padding:0 6px;background:var(--surface);border-top:1px solid var(--line);flex:none;overflow-x:auto;scrollbar-width:none}
+.sheettabs::-webkit-scrollbar{display:none}
+.stab{display:flex;align-items:center;gap:6px;padding:0 14px;height:30px;border:0;background:none;border-radius:6px;font-size:13px;color:var(--muted);white-space:nowrap;flex:none}
+.stab.on{background:var(--app-soft);color:var(--ink);font-weight:650;box-shadow:inset 0 -2px 0 var(--app)}
+.stab:hover{background:var(--surface-3)}
+.stabadd{width:32px;height:30px;display:grid;place-items:center;border:0;background:none;border-radius:6px;color:var(--muted);flex:none}
+.stabadd:hover{background:var(--surface-3)}
+.note-dot{position:absolute;top:0;right:0;border:5px solid transparent;border-top-color:#d08a2a;border-right-color:#d08a2a}
+.chart-obj{position:absolute;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:8px;z-index:30;color:var(--muted);overflow:hidden}
+.chart-obj .chh{display:flex;align-items:center;padding:2px 4px 2px 10px;border-bottom:1px solid var(--line-soft);cursor:move;font-size:12.5px;color:var(--ink);font-weight:600}
+.chart-obj .chh .sp{flex:1}
+.status #aggInfo{overflow:hidden;text-overflow:ellipsis}
+@media (max-width:720px){
+  .formulabar{height:46px}
+  .cellref{width:62px;font-size:12px;line-height:46px}
+  #formulaInput{height:38px;font-size:16px}
+  .cell{font-size:15px}
+  .celleditor{font-size:16px}
+  .colresize{width:18px;right:-9px}
+  .rowresize{height:18px;bottom:-9px}
+}
+@media print{.formulabar,.sheettabs{display:none}.gridwrap{overflow:visible}}
